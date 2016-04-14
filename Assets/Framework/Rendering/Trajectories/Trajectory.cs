@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+/** Simulates and renders an estimated physics trajectory. */
+
 public class Trajectory : MonoBehaviour
 {
 
