@@ -1,0 +1,25 @@
+using UnityEngine;
+using System.Collections;
+
+[System.Serializable]
+public class GameConfig
+{
+    /** Minimum number of players in game. */
+    public int MinPlayers = 1;
+
+    /** Maximum number of players in game. */
+    public int MaxPlayers = 1;
+
+    /** Number of lives that player has per game. */
+    public int PlayerLives = 1;
+
+    /** Points awarded for enemy damage. */
+    public float PointsForDamage = 2;
+
+    /** Points awarded for killing an enemy. */
+    public float PointsForKill = 100;
+
+    /** Player colors. */
+    public Color[] PlayerColors;
+
+}
