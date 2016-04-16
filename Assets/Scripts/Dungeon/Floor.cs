@@ -20,6 +20,9 @@ public class Floor : Procedural
         }
     }
 
+    /** Seed to use for this floor. */
+    public int Seed;
+
     /** The name of this floor. */
     public string Name
     { get { return "FLOOR " + Depth; } }

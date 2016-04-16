@@ -55,7 +55,7 @@ public class Dungeon : Procedural
             var floor = Instantiate(FloorPrefab);
             Floors.Add(floor);
             floor.transform.parent = transform;
-            floor.Generate(Random.NextInteger());
+            floor.Seed = Random.NextInteger();
         }
 
         for (var i = 0; i < floorCount; i++)
@@ -79,10 +79,15 @@ public class Dungeon : Procedural
         if (index < 0 || index >= Floors.Count)
             return false;
 
+        _current = index;
+
+        var floor = Floors[index];
+        if (!floor.Generated)
+            floor.Generate(floor.Seed);
+
         for (var i = 0; i < Floors.Count; i++)
             Floors[i].gameObject.SetActive(i == index);
 
-        _current = index;
         return true;
     }
 

@@ -3,6 +3,15 @@ using System.Collections;
 
 public class Procedural : MonoBehaviour
 {
+
+    // Properties
+    // -----------------------------------------------------
+
+    /** Whether object has been generated. */
+    public bool Generated
+    { get; private set; }
+
+
     // Members
     // -----------------------------------------------------
 
@@ -15,10 +24,15 @@ public class Procedural : MonoBehaviour
 
     /** Generates procedural content. */
     public virtual void Generate(int seed)
-        { Random.SetSeed(seed); }
+    {
+        Random.SetSeed(seed);
+        Generated = true;
+    }
 
     /** Cleans up generated content. */
     public virtual void Degenerate()
-        { }
+    {
+        Generated = false;
+    }
 
 }
