@@ -20,6 +20,10 @@ public class Floor : Procedural
         }
     }
 
+    /** The name of this floor. */
+    public string Name
+    { get { return "FLOOR " + Depth; } }
+
     /** The depth of this floor. */
     public int Depth
     { get; private set; }

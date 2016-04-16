@@ -47,6 +47,24 @@ public class GameManager : Singleton<GameManager>
     public GameConfig Config;
 
 
+    // Events
+    // -----------------------------------------------------
+
+    /** Generic game manager event handler. */
+    public delegate void GameEventHandler(GameManager game);
+
+    /** Dungeon floor event handler. */
+    public delegate void FloorEventHandler(GameManager game, Floor floor);
+
+    /** Event fired when game starts. */
+    public GameEventHandler Started;
+
+    /** Event fired when player moves to a new floor. */
+    public FloorEventHandler ChangedFloor;
+
+    /** Event fired when game ends. */
+    public GameEventHandler Ended;
+
 
     // Members
     // -----------------------------------------------------
@@ -108,6 +126,15 @@ public class GameManager : Singleton<GameManager>
         // Configure players.
         Players.Configure(this);
 
+        // Snap camera to initial location.
+        var p = Players.Players[0].transform.position;
+        CameraController.Instance.SnapTo(p);
+        UI.Instance.FadeFrom(1, 2);
+
+        // Fire game started event.
+        if (Started != null)
+            Started(this);
+
         // First, play intro.
         yield return StartCoroutine(IntroRoutine());
         yield return StartCoroutine(PlayingRoutine());
@@ -143,19 +170,26 @@ public class GameManager : Singleton<GameManager>
     /** Switch floors. */
     private IEnumerator ChangeFloor(Floor floor)
     {
-        // TODO: Fade to black.
-        yield return new WaitForSeconds(1);
+        UI.Instance.Fade(1, 2);
+        yield return new WaitForSeconds(2);
 
         // Update the current floor.
         Dungeon.SetCurrentFloor(_floor);
 
         // Move player(s) to entrance location.
         var entrance = _floor.EntranceRoom.GetComponentInChildren<Entrance>();
+        var p = entrance.transform.position;
         foreach (var player in Players.Players)
             if (player.HasControlled)
-                player.Controlled.transform.position = entrance.transform.position;
+                player.Controlled.transform.position = p;
 
-        // TODO: Fade from black.
+        // Snap camera to new location.
+        CameraController.Instance.SnapTo(p);
+        UI.Instance.Fade(0, 2);
+
+        // Fire floor change notification.
+        if (ChangedFloor != null)
+            ChangedFloor(this, floor);
     }
 
     /** Handle the game over condition. */

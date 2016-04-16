@@ -93,5 +93,11 @@ public class CameraController : Singleton<CameraController>
         Eye.transform.LookAt(transform.position);
     }
 
+    public void SnapTo(Vector3 p)
+    {
+        _positionVelocity = Vector3.zero;
+        transform.position = p;
+    }
+
 }
 
