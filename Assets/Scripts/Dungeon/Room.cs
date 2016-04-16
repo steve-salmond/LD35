@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class Room : MonoBehaviour
+public class Room : Procedural
 {
 
     // Properties
@@ -12,15 +12,15 @@ public class Room : MonoBehaviour
     /** Size of the room, in units. */
     public Vector3 Extents;
     
-    /** The dungeon that this room belongs to. */
-    public Dungeon Dungeon
+    /** The floor that this room belongs to. */
+    public Floor Floor
     {
         get
         {
-            if (!_dungeon)
-                _dungeon = GetComponentInParent<Dungeon>();
+            if (!_floor)
+                _floor = GetComponentInParent<Floor>();
 
-            return _dungeon;
+            return _floor;
         }
     }
 
@@ -40,21 +40,27 @@ public class Room : MonoBehaviour
     // Members
     // -----------------------------------------------------
 
-    /** The dungeon that this room belongs to. */
-    private Dungeon _dungeon;
+    /** The floor that this room belongs to. */
+    private Floor _floor;
 
 
     // Public Methods
     // -----------------------------------------------------
 
+    /** Generate this room. */
+    public override void Generate(int seed)
+    {
+        base.Generate(seed);
+    }
+
     /** Indicates whether this room is moving or not. */
     public void SetMoving(bool value)
     {
         Moving = value;
-        Dungeon.UpdateState();
+        Floor.UpdateState();
     }
 
-    /** Initialize the dungeon state. */
+    /** Initialize the floor state. */
     public void InitState()
     {
         Doors = new List<Door>(GetComponentsInChildren<Door>());
@@ -62,13 +68,13 @@ public class Room : MonoBehaviour
             door.InitState();
 
         // Locate corridors that are adjacent to this room.
-        var colliders = Physics.OverlapBox(transform.position, Extents * 0.5f, Quaternion.identity, Dungeon.CorridorMask);
+        var colliders = Physics.OverlapBox(transform.position, Extents * 0.5f, Quaternion.identity, Floor.CorridorMask);
         Corridors = colliders.Select(c => c.GetComponentInParent<Corridor>()).Where(c => c != null).ToList();
         foreach (var corridor in Corridors)
             corridor.Rooms.Add(this);
     }
 
-    /** Update the dungeon state. */
+    /** Update the floor state. */
     public void UpdateState()
     {
         foreach (var door in Doors)

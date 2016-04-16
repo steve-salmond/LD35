@@ -4,6 +4,9 @@ using System.Collections;
 [System.Serializable]
 public class GameConfig
 {
+    /** Dungeon generation seed. */
+    public int Seed;
+
     /** Minimum number of players in game. */
     public int MinPlayers = 1;
 

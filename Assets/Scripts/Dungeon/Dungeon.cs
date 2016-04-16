@@ -2,58 +2,79 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Dungeon : MonoBehaviour
+
+/** A Dungeon consists of one or more Floors. */
+
+public class Dungeon : Procedural
 {
 
     // Properties
     // -----------------------------------------------------
 
-    /** List of rooms in the dungeon. */
-    public List<Room> Rooms
+    /** The set of floors in this dungeon. */
+    public List<Floor> Floors
     { get; private set; }
 
-    /** List of corridors in the dungeon. */
-    public List<Corridor> Corridors
-    { get; private set; }
-
-    /** Layer mask for detecting corridors. */
-    public LayerMask CorridorMask;
+    /** The current floor. */
+    public Floor CurrentFloor
+    { get { return Floors[_current]; } }
 
 
-    // Unity Methods
+    [Header("Generation")]
+
+    /** Difficulty factor (0 == easy, 1 = very hard). */
+    public float Difficulty;
+    
+    /** Number of floors in the dungeon (depends on difficulty). */
+    public AnimationCurve FloorCountForDifficulty;
+
+    /** Prefab used to generate a floor. */
+    public Floor FloorPrefab;
+
+
+    // Members
     // -----------------------------------------------------
 
-    /** Initialization. */
-    private void Start()
-    {
-        InitState();
-        UpdateState();
-    }
+    /** The current floor index. */
+    private int _current = 0;
 
 
     // Public Methods
     // -----------------------------------------------------
 
-    /** Initialize the dungeon state. */
-    public void InitState()
+    /** Generate this dungeon. */
+    public override void Generate(int seed)
     {
-        Rooms = new List<Room>(GetComponentsInChildren<Room>());
-        Corridors = new List<Corridor>(GetComponentsInChildren<Corridor>());
+        base.Generate(seed);
 
-        foreach (var room in Rooms)
-            room.InitState();
-        foreach (var corridor in Corridors)
-            corridor.InitState();
+        Floors = new List<Floor>();
+        var floorCount = FloorCountForDifficulty.Evaluate(Difficulty);
+
+        for (var i = 0; i < floorCount; i++)
+        {
+            var floor = Instantiate(FloorPrefab);
+            Floors.Add(floor);
+            floor.transform.parent = transform;
+            floor.Generate(Random.NextInteger());
+        }
+
+        for (var i = 0; i < floorCount; i++)
+        {
+            if (i > 0)
+                Floors[i].SetPrevious(Floors[i - 1]);
+            if (i < (floorCount - 1))
+                Floors[i].SetNext(Floors[i + 1]);
+        }
+
+        SetCurrentFloor(Floors[0]);
     }
 
-
-    /** Update the dungeon state. */
-    public void UpdateState()
+    /** Move to the next floor. */
+    public void SetCurrentFloor(Floor current)
     {
-        foreach (var corridor in Corridors)
-            corridor.UpdateState();
-        foreach (var room in Rooms)
-            room.UpdateState();
+        foreach (var floor in Floors)
+            floor.gameObject.SetActive(floor == current);
     }
 
 }
+

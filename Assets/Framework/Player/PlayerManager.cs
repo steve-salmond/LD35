@@ -169,6 +169,10 @@ public class PlayerManager : MonoBehaviour
         if (_playersById.ContainsKey(id))
             return;
 
+        // Check max player count.
+        if (id >= _game.Config.MaxPlayers)
+            return;
+
         // Instantiate and configure the player.
         var player = Instantiate(PlayerPrefab);
         _playersById[id] = player;

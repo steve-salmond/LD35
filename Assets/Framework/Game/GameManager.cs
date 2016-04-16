@@ -34,6 +34,9 @@ public class GameManager : Singleton<GameManager>
     /** The player manager. */
     public PlayerManager Players;
 
+    /** The dungeon to play in. */
+    public Dungeon Dungeon;
+
 
     // Configuration
     // -----------------------------------------------------
@@ -74,6 +77,9 @@ public class GameManager : Singleton<GameManager>
     {
         // Reset game state.
         SetState(GameState.None);
+
+        // Generate dungeon.
+        Dungeon.Generate(Config.Seed);
 
         // Configure players.
         Players.Configure(this);

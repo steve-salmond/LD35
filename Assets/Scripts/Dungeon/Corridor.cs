@@ -22,15 +22,15 @@ public class Corridor : MonoBehaviour
     public List<Room> Rooms
     { get; private set; }
 
-    /** The dungeon that this corridor belongs to. */
-    public Dungeon Dungeon
+    /** The floor that this corridor belongs to. */
+    public Floor Floor
     {
         get
         {
-            if (!_dungeon)
-                _dungeon = GetComponentInParent<Dungeon>();
+            if (!_floor)
+                _floor = GetComponentInParent<Floor>();
 
-            return _dungeon;
+            return _floor;
         }
     }
 
@@ -42,8 +42,8 @@ public class Corridor : MonoBehaviour
     // Members
     // -----------------------------------------------------
 
-    /** The dungeon that this corridor belongs to. */
-    private Dungeon _dungeon;
+    /** The floor that this corridor belongs to. */
+    private Floor _floor;
 
     /** The set of wall colliders in this corridor. */
     private BoxCollider[] _colliders;
@@ -74,12 +74,12 @@ public class Corridor : MonoBehaviour
     // Public Methods
     // -----------------------------------------------------
 
-    /** Initialize the dungeon state. */
+    /** Initialize the floor state. */
     public void InitState()
     {
     }
 
-    /** Update the dungeon state. */
+    /** Update the floor state. */
     public void UpdateState()
     {
         // Corridor is moving if it's next to a moving room.

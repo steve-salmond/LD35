@@ -7,9 +7,9 @@ public class Door : MonoBehaviour
     // Properties
     // -----------------------------------------------------
 
-    /** The dungeon that this door belongs to. */
-    public Dungeon Dungeon
-    { get { return Room.Dungeon; } }
+    /** The floor that this door belongs to. */
+    public Floor Floor
+    { get { return Room.Floor; } }
 
     /** The room that this door belongs to. */
     public Room Room
@@ -74,16 +74,16 @@ public class Door : MonoBehaviour
     // Public Methods
     // -----------------------------------------------------
 
-    /** Initialize the dungeon state. */
+    /** Initialize the floor state. */
     public void InitState()
     {
     }
 
-    /** Update the dungeon state. */
+    /** Update the floor state. */
     public void UpdateState()
     {
         // Check for adjacent corridor colliders.
-        var n = Physics.OverlapSphereNonAlloc(transform.position, 5, _corridors, Dungeon.CorridorMask);
+        var n = Physics.OverlapSphereNonAlloc(transform.position, 5, _corridors, Floor.CorridorMask);
 
         // Lock/unlock door accordingly.
         Locked = n <= 0 || Room.Moving;
