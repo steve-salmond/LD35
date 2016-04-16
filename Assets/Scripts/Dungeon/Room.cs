@@ -80,15 +80,6 @@ public class Room : Procedural
 
     /** Indicates whether this room is moving or not. */
     public void SetMoving(bool value)
-    {
-        Moving = value;
-        Floor.UpdateState();
-    }
+        { Moving = value; }
 
-    /** Update the floor state. */
-    public void UpdateState()
-    {
-        foreach (var door in Doors)
-            door.UpdateState();
-    }
 }

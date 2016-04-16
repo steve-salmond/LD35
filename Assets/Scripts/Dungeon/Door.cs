@@ -72,22 +72,29 @@ public class Door : MonoBehaviour
     private Collider[] _doors = new Collider[2];
 
 
-    // Public Methods
+    // Unity Methods
     // -----------------------------------------------------
 
-    /** Update the floor state. */
-    public void UpdateState()
+    /** Update the door state. */
+    private void Update()
     {
         // Check for adjacent doors.
         var doorMask = 1 << gameObject.layer;
         var n = Physics.OverlapSphereNonAlloc(transform.position, 5, _doors, doorMask);
 
-        // Lock/unlock door accordingly.
-        Locked = n <= 1 || Room.Moving;
+        // Determine whether door should be locked or not.
+        var locked = n == 1 || Room.Moving;
+        for (var i = 0; i < n; i++)
+            if (_doors[i].GetComponentInParent<Door>().Room.Moving)
+                locked = true;
+
+        // Lock/unlock door.
+        Locked = locked;
 
         // We've now updated state.
         _updated = true;
     }
+
 
     // Private Methods
     // -----------------------------------------------------

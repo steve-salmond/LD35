@@ -151,9 +151,9 @@ public class GroundControllable : ControllableBehaviour
         var c = Origin.position;
         var offset = Vector3.right * GroundHorizontalOffset;
         RaycastHit hit;
-        Grounded = IsAgainstGround(c, Vector3.down, out hit)
-            || IsAgainstGround(c + offset, Vector3.down, out hit)
-            || IsAgainstGround(c - offset, Vector3.down, out hit);
+        Grounded = IsAgainstGround(c, Vector3.down, out hit);
+        //    || IsAgainstGround(c + offset, Vector3.down, out hit)
+        //    || IsAgainstGround(c - offset, Vector3.down, out hit);
 
         // Update the current ground information.
         if (Grounded)

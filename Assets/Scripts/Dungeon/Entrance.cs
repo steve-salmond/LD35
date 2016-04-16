@@ -4,7 +4,7 @@ using System.Collections;
 public class Entrance : UseableBehaviour
 {
 
-    public override void Use()
+    public override void Use(PlayerControllable pc)
     {
         GameManager.Instance.PreviousFloor();
     }

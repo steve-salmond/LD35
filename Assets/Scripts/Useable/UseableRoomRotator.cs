@@ -62,7 +62,7 @@ public class UseableRoomRotator : UseableBehaviour
     // -----------------------------------------------------
 
     /** Use this object. */
-    public override void Use()
+    public override void Use(PlayerControllable pc)
     {
         _target = Room.GetRelative(Offset);
         if (_target == null || _target.Moving)

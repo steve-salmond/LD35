@@ -41,6 +41,10 @@ public class PlayerControllable : ControllableBehaviour
     /** Layer mask that governs what usable objects will be detected. */
     public LayerMask UseMask;
 
+    /** Ladder that player's climbing on (if any). */
+    public UseableLadder Ladder
+    { get; private set; }
+
 
     // Members
     // -----------------------------------------------------
@@ -69,6 +73,22 @@ public class PlayerControllable : ControllableBehaviour
     }
 
 
+    // Public Methods
+    // -----------------------------------------------------
+
+    /** Start using a ladder. */
+    public void Climb(UseableLadder ladder)
+    {
+        Ladder = ladder;
+    }
+
+    /** Dismount the current ladder (if any). */
+    public void Dismount()
+    {
+        Ladder = null;
+    }
+
+
     // Protected Methods
     // -----------------------------------------------------
 
@@ -78,6 +98,10 @@ public class PlayerControllable : ControllableBehaviour
         // Check if player wishes to use something.
         if (Controller.GetButtonDown("Use"))
             Use();
+
+        // Dismount ladders when player jumps.
+        if (Controller.GetButtonDown("Jump"))
+            Dismount();
     }
 
     /** Register with a controller. */
@@ -115,7 +139,7 @@ public class PlayerControllable : ControllableBehaviour
 
         var useable = _colliders[0].GetComponent<UseableBehaviour>();
         if (useable)
-            useable.Use();
+            useable.Use(this);
     }
 
 

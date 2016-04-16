@@ -4,6 +4,6 @@ using System.Collections;
 public abstract class UseableBehaviour : MonoBehaviour
 {
 
-    public abstract void Use();
+    public abstract void Use(PlayerControllable pc);
     
 }

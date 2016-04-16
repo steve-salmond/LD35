@@ -135,9 +135,6 @@ public class Floor : Procedural
             // Randomly set one room upright in each row.
             columns[Random.Range(0, cols)].transform.rotation = Quaternion.identity;
         }
-
-        // Set up initial state.
-        UpdateState();
     }
 
     /** Set previous floor. */
@@ -147,13 +144,6 @@ public class Floor : Procedural
     /** Set next floor. */
     public void SetNext(Floor floor)
     { Next = floor; }
-
-    /** Update the floor state. */
-    public void UpdateState()
-    {
-        foreach (var room in Rooms)
-            room.UpdateState();
-    }
 
     /** Locate room at the given address. */
     public Room GetRoom(int row, int col)
