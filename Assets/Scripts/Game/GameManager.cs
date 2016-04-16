@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,6 +79,9 @@ public class GameManager : Singleton<GameManager>
     /** The current dungeon floor. */
     private Floor _floor;
 
+    /** Whether player has completed the game. */
+    private bool _completed = false;
+
 
     // Unity Methods
     // -----------------------------------------------------
@@ -99,6 +103,8 @@ public class GameManager : Singleton<GameManager>
         var next = Dungeon.CurrentFloor.Next;
         if (next != null)
             _floor = next;
+        else
+            _completed = true;
     }
 
     /** Try to move to the previous floor in the dungeon. */
@@ -162,6 +168,8 @@ public class GameManager : Singleton<GameManager>
         {
             if (_floor != Dungeon.CurrentFloor)
                 yield return StartCoroutine(ChangeFloor(_floor));
+            else if (_completed)
+                yield break;
 
             yield return 0;
         }
@@ -195,7 +203,14 @@ public class GameManager : Singleton<GameManager>
     /** Handle the game over condition. */
     private IEnumerator GameOverRoutine()
     {
-        yield return 0;
+        SetState(GameState.GameOver);
+
+        // Fire game ended notification.
+        if (Ended != null)
+            Ended(this);
+
+        yield return new WaitForSeconds(5);
+        SceneManager.LoadScene("Intro");
     }
 
 

@@ -11,6 +11,8 @@ public class UI : Singleton<UI>
 
     public Text FloorName;
 
+    public Text GameOver;
+
 
     /** Initialization. */
     private void Awake()
@@ -31,6 +33,11 @@ public class UI : Singleton<UI>
         StartCoroutine(ChangeFloorRoutine(game, floor));
     }
 
+    private void OnGameEnded(GameManager game)
+    {
+        StartCoroutine(GameOverRoutine(game));
+    }
+
     private IEnumerator ChangeFloorRoutine(GameManager game, Floor floor)
     {
         FloorName.text = floor.Name;
@@ -39,8 +46,10 @@ public class UI : Singleton<UI>
         FloorName.DOFade(0, 1);
     }
 
-    private void OnGameEnded(GameManager game)
+    private IEnumerator GameOverRoutine (GameManager game)
     {
+        GameOver.DOFade(1, 1);
+        yield return new WaitForSeconds(2);
     }
 
 
