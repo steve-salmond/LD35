@@ -83,7 +83,7 @@ public class Door : MonoBehaviour
     public void UpdateState()
     {
         // Check for adjacent corridor colliders.
-        var n = Physics.OverlapSphereNonAlloc(transform.position, 1, _corridors, Dungeon.CorridorMask);
+        var n = Physics.OverlapSphereNonAlloc(transform.position, 5, _corridors, Dungeon.CorridorMask);
 
         // Lock/unlock door accordingly.
         Locked = n <= 0 || Room.Moving;
