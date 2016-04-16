@@ -59,6 +59,15 @@ public class PlayerControllable : ControllableBehaviour
             Body = GetComponent<Rigidbody>();
     }
 
+    /** Physics update. */
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+
+        if (Body.IsSleeping())
+            Body.WakeUp();
+    }
+
 
     // Protected Methods
     // -----------------------------------------------------
