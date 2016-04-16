@@ -32,6 +32,14 @@ public class Floor : Procedural
     public Floor Next
     { get; private set; }
 
+    /** The entrance room for this floor. */
+    public Room EntranceRoom
+    { get; private set; }
+
+    /** The exit room for this floor. */
+    public Room ExitRoom
+    { get; private set; }
+
     /** List of rooms in the floor. */
     public List<Room> Rooms
     { get; private set; }
@@ -73,8 +81,8 @@ public class Floor : Procedural
     {
         base.Generate(seed);
 
-        Depth = Dungeon.Floors.IndexOf(this);
-        Rooms = new List<Room>();
+        Depth = Dungeon.Floors.IndexOf(this) + 1;
+        gameObject.name = "Floor " + Depth;
 
         // Determine how big to make this floor.
         var rows = Mathf.RoundToInt(RowsForDepth.Evaluate(Depth));
@@ -85,17 +93,29 @@ public class Floor : Procedural
         var exit = Random.Range(0, cols);
 
         // Populate the rooms.
+        Rooms = new List<Room>();
         for (var row = 0; row < rows; row++)
             for (var col = 0; col < cols; col++)
             {
+                var isEntrance = row == 0 && col == entrance;
+                var isExit = row == rows - 1 && col == exit;
                 var prefab = RoomPrefabs[Random.Range(0, RoomPrefabs.Count)];
-                if (row == 0 && col == entrance)
+                if (isEntrance)
                     prefab = EntranceRoomPrefabs[Random.Range(0, EntranceRoomPrefabs.Count)];
-                if (row == rows - 1 && col == exit)
+                else if (isExit)
                     prefab = ExitRoomPrefabs[Random.Range(0, ExitRoomPrefabs.Count)];
 
                 var room = GenerateRoom(row, col, prefab);
                 Rooms.Add(room);
+
+                if (isEntrance)
+                    EntranceRoom = room;
+                else if (isExit)
+                    ExitRoom = room;
+
+                // Don't allow the entrance room to be rotated, since player spawns there.
+                if (isEntrance)
+                    room.transform.rotation = Quaternion.identity;
             }
 
         // Set up initial state.
@@ -128,6 +148,7 @@ public class Floor : Procedural
         room.transform.position = new Vector3(RoomOffset.x * col, -RoomOffset.y * row);
         room.transform.rotation = Quaternion.Euler(0, 0, 90 * Random.Range(0, 4));
         room.transform.parent = transform;
+        room.gameObject.name = string.Format("Room(R{0},C{1})", row, col);
         room.Generate(Random.NextInteger());
 
         return room;

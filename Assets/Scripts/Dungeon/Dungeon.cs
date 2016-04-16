@@ -69,12 +69,30 @@ public class Dungeon : Procedural
         SetCurrentFloor(Floors[0]);
     }
 
-    /** Move to the next floor. */
-    public void SetCurrentFloor(Floor current)
+    /** Set the current floor. */
+    public bool SetCurrentFloor(Floor value)
+    { return SetCurrentFloor(Floors.IndexOf(value)); }
+
+    /** Set floor by index. */
+    public bool SetCurrentFloor(int index)
     {
-        foreach (var floor in Floors)
-            floor.gameObject.SetActive(floor == current);
+        if (index < 0 || index >= Floors.Count)
+            return false;
+
+        for (var i = 0; i < Floors.Count; i++)
+            Floors[_current].gameObject.SetActive(i == index);
+
+        _current = index;
+        return true;
     }
+
+    /** Move to the next floor if possible. */
+    public bool SetNextFloor()
+        { return SetCurrentFloor(CurrentFloor.Next); }
+
+    /** Move to the previous floor if possible. */
+    public bool SetPreviousFloor()
+        { return SetCurrentFloor(CurrentFloor.Previous); }
 
 }
 

@@ -57,6 +57,9 @@ public class GameManager : Singleton<GameManager>
     /** Time at which match will end. */
     private float _matchEndTime;
 
+    /** The current dungeon floor. */
+    private Floor _floor;
+
 
     // Unity Methods
     // -----------------------------------------------------
@@ -66,6 +69,26 @@ public class GameManager : Singleton<GameManager>
     {
         // Fire up the game control routine.
         StartCoroutine(GameRoutine());
+    }
+
+
+    // Public Methods
+    // -----------------------------------------------------
+
+    /** Try to move to the next floor in the dungeon. */
+    public void NextFloor()
+    {
+        var next = Dungeon.CurrentFloor.Next;
+        if (next != null)
+            _floor = next;
+    }
+
+    /** Try to move to the previous floor in the dungeon. */
+    public void PreviousFloor()
+    {
+        var previous = Dungeon.CurrentFloor.Previous;
+        if (previous != null)
+            _floor = previous;
     }
 
 
@@ -80,6 +103,7 @@ public class GameManager : Singleton<GameManager>
 
         // Generate dungeon.
         Dungeon.Generate(Config.Seed);
+        _floor = Dungeon.CurrentFloor;
 
         // Configure players.
         Players.Configure(this);
@@ -108,7 +132,30 @@ public class GameManager : Singleton<GameManager>
         SetState(GameState.Playing);
 
         while (Players.AlivePlayerCount > 0)
+        {
+            if (_floor != Dungeon.CurrentFloor)
+                yield return StartCoroutine(ChangeFloor(_floor));
+
             yield return 0;
+        }
+    }
+
+    /** Switch floors. */
+    private IEnumerator ChangeFloor(Floor floor)
+    {
+        // TODO: Fade to black.
+        yield return new WaitForSeconds(1);
+
+        // Update the current floor.
+        Dungeon.SetCurrentFloor(_floor);
+
+        // Move player(s) to entrance location.
+        var entrance = _floor.EntranceRoom.GetComponentInChildren<Entrance>();
+        foreach (var player in Players.Players)
+            if (player.HasControlled)
+                player.Controlled.transform.position = entrance.transform.position;
+
+        // TODO: Fade from black.
     }
 
     /** Handle the game over condition. */
