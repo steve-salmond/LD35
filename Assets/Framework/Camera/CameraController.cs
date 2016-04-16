@@ -16,8 +16,8 @@ public class CameraController : Singleton<CameraController>
 
     public float SmoothTime = 0.2f;
 
-    public Vector3 DistanceRange = new Vector2(20, 60);
-    public Vector3 SeparationRange = new Vector2(20, 60);
+    public Vector2 DistanceRange = new Vector2(20, 60);
+    public Vector2 SeparationRange = new Vector2(20, 60);
 
     public Vector3 PositionOffset;
 

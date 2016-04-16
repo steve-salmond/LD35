@@ -215,7 +215,7 @@ public class Player : MonoBehaviour
     }
 
     /** Spawn player at the specified location. */
-    public bool Spawn(SpawnPoint spawn)
+    public bool Spawn(PlayerSpawnPoint spawn)
     {
         // Can't spawn if already in control of a host.
         if (HasControlled)

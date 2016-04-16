@@ -214,10 +214,10 @@ public class GroundControllable : ControllableBehaviour
             pc.VibrateRight(effect.VibrationStrength, effect.VibrationDuration);
 
         // Configure effect for possible damage.
-        var damager = go.GetComponent<Damager>();
+        var damager = go ? go.GetComponent<Damager>() : null;
         if (damager)
             damager.SetInitiator(Damager);
-        var explosive = go.GetComponent<Explosive>();
+        var explosive = go ? go.GetComponent<Explosive>() : null;
         if (explosive)
             explosive.AddIgnored(Body.gameObject);
     }

@@ -90,7 +90,7 @@ public class GameManager : Singleton<GameManager>
         SetState(GameState.Intro);
 
         // Hide the mouse cursor.
-        Cursor.visible = false;
+        // Cursor.visible = false;
 
         // Delay a bit after login.
         yield return new WaitForSeconds(0.5f);

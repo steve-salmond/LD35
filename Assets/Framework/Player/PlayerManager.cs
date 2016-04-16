@@ -87,7 +87,7 @@ public class PlayerManager : MonoBehaviour
     private Dictionary<int, Player> _playersById = new Dictionary<int, Player>();
 
     /** The collection of spawn points in the game. */
-    private List<SpawnPoint> _spawns = new List<SpawnPoint>();
+    private List<PlayerSpawnPoint> _spawns = new List<PlayerSpawnPoint>();
 
     /** The current game. */
     private GameManager _game;
@@ -115,15 +115,15 @@ public class PlayerManager : MonoBehaviour
     }
 
     /** Add a spawn point. */
-    public void AddSpawn(SpawnPoint spawn)
+    public void AddSpawn(PlayerSpawnPoint spawn)
     { _spawns.Add(spawn); }
 
     /** Remove a spawn point. */
-    public void RemoveSpawn(SpawnPoint spawn)
+    public void RemoveSpawn(PlayerSpawnPoint spawn)
     { _spawns.Remove(spawn); }
 
     /** Locate a spawn point by id. */
-    public SpawnPoint GetSpawnById(int id)
+    public PlayerSpawnPoint GetSpawnById(int id)
     {
         var spawnName = "Spawn" + id;
         return _spawns
@@ -132,7 +132,7 @@ public class PlayerManager : MonoBehaviour
     }
 
     /** Locates the safest spawn point to spawn from. */
-    public SpawnPoint GetSafestSpawn()
+    public PlayerSpawnPoint GetSafestSpawn()
     {
         return _spawns
             .Where(spawn => spawn.CanSpawn())
