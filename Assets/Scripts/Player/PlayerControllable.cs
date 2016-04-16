@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -33,6 +33,22 @@ public class PlayerControllable : ControllableBehaviour
     public MeleeControllable Melee;
 
 
+    [Header("Using")]
+
+    /** Radius to check for nearby objects when using. */
+    public float UseRadius = 1;
+
+    /** Layer mask that governs what usable objects will be detected. */
+    public LayerMask UseMask;
+
+
+    // Members
+    // -----------------------------------------------------
+
+    /** Buffer for detecting usable objects. */
+    private Collider[] _colliders = new Collider[1];
+
+
     // Unity Methods
     // -----------------------------------------------------
 
@@ -50,6 +66,9 @@ public class PlayerControllable : ControllableBehaviour
     /** Update from controller. */
     protected override void UpdateControllable(Controller controller)
     {
+        // Check if player wishes to use something.
+        if (Controller.GetButtonDown("Use"))
+            Use();
     }
 
     /** Register with a controller. */
@@ -73,5 +92,22 @@ public class PlayerControllable : ControllableBehaviour
         Aiming.Controller = null;
         Melee.Controller = null;
     }
+
+
+    // Private Methods
+    // -----------------------------------------------------
+
+    /** Attempt to use a nearby object. */
+    private void Use()
+    {
+        var n = Physics.OverlapSphereNonAlloc(transform.position, UseRadius, _colliders, UseMask);
+        if (n <= 0)
+            return;
+
+        var useable = _colliders[0].GetComponent<UseableBehaviour>();
+        if (useable)
+            useable.Use();
+    }
+
 
 }
