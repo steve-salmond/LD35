@@ -7,6 +7,9 @@ public class Door : MonoBehaviour
     // Properties
     // -----------------------------------------------------
 
+    /** The door's blocking body. */
+    public GameObject Blocker;
+
     /** The floor that this door belongs to. */
     public Floor Floor
     { get { return Room.Floor; } }
@@ -35,12 +38,10 @@ public class Door : MonoBehaviour
 
             _locked = value;
 
-            // Show or hide the door.
-            gameObject.SetActive(value);
-
-            // Spawn lock/unlock effect.
-            if (_updated)
-                ObjectPool.GetAt(_locked ? LockEffectPrefab : UnlockEffectPrefab, transform);
+            if (_locked)
+                StartCoroutine(LockRoutine());
+            else
+                StartCoroutine(UnlockRoutine());
         }
     }
 
@@ -68,28 +69,55 @@ public class Door : MonoBehaviour
     private bool _locked = true;
 
     /** Collider buffer used to detect adjacent corridors. */
-    private Collider[] _corridors = new Collider[1];
+    private Collider[] _doors = new Collider[2];
 
 
     // Public Methods
     // -----------------------------------------------------
 
-    /** Initialize the floor state. */
-    public void InitState()
-    {
-    }
-
     /** Update the floor state. */
     public void UpdateState()
     {
-        // Check for adjacent corridor colliders.
-        var n = Physics.OverlapSphereNonAlloc(transform.position, 5, _corridors, Floor.CorridorMask);
+        // Check for adjacent doors.
+        var doorMask = 1 << gameObject.layer;
+        var n = Physics.OverlapSphereNonAlloc(transform.position, 5, _doors, doorMask);
 
         // Lock/unlock door accordingly.
-        Locked = n <= 0 || Room.Moving;
+        Locked = n <= 1 || Room.Moving;
 
         // We've now updated state.
         _updated = true;
+    }
+
+    // Private Methods
+    // -----------------------------------------------------
+
+    /** Routine to update door's locked state. */
+    private IEnumerator LockRoutine()
+    {
+        // Wait a little bit.
+        yield return 0;
+
+        // Show the door.
+        Blocker.SetActive(true);
+
+        // Spawn lock effect.
+        if (_updated)
+            ObjectPool.GetAt(LockEffectPrefab, transform);
+    }
+
+    /** Routine to update door's locked state. */
+    private IEnumerator UnlockRoutine()
+    {
+        // Wait a little bit.
+        yield return 0;
+
+        // Hide the door.
+        Blocker.SetActive(false);
+
+        // Spawn unlock effect.
+        if (_updated)
+            ObjectPool.GetAt(UnlockEffectPrefab, transform);
     }
 
 }

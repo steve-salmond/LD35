@@ -36,10 +36,6 @@ public class Floor : Procedural
     public List<Room> Rooms
     { get; private set; }
 
-    /** List of corridors in the floor. */
-    public List<Corridor> Corridors
-    { get; private set; }
-
 
     [Header("Generation")]
 
@@ -60,12 +56,6 @@ public class Floor : Procedural
 
     /** Offset for rooms in each dimension. */
     public Vector2 RoomOffset;
-
-
-    [Header("Setup")]
-
-    /** Layer mask for detecting corridors. */
-    public LayerMask CorridorMask;
 
 
     // Members
@@ -104,13 +94,11 @@ public class Floor : Procedural
                 if (row == rows - 1 && col == exit)
                     prefab = ExitRoomPrefabs[Random.Range(0, ExitRoomPrefabs.Count)];
 
-                GenerateRoom(row, col, prefab);
+                var room = GenerateRoom(row, col, prefab);
+                Rooms.Add(room);
             }
 
-        // TODO: Generate corridors.
-
-        // Set up the rooms/corridors.
-        InitState();
+        // Set up initial state.
         UpdateState();
     }
 
@@ -125,8 +113,6 @@ public class Floor : Procedural
     /** Update the floor state. */
     public void UpdateState()
     {
-        foreach (var corridor in Corridors)
-            corridor.UpdateState();
         foreach (var room in Rooms)
             room.UpdateState();
     }
@@ -136,25 +122,15 @@ public class Floor : Procedural
     // -----------------------------------------------------
 
     /** Generate a room. */
-    private void GenerateRoom(int row, int col, Room prefab)
+    private Room GenerateRoom(int row, int col, Room prefab)
     {
         var room = Instantiate(prefab);
-        Rooms.Add(room);
         room.transform.position = new Vector3(RoomOffset.x * col, -RoomOffset.y * row);
+        room.transform.rotation = Quaternion.Euler(0, 0, 90 * Random.Range(0, 4));
         room.transform.parent = transform;
         room.Generate(Random.NextInteger());
-    }
 
-    /** Initialize the floor state. */
-    private void InitState()
-    {
-        Rooms = new List<Room>(GetComponentsInChildren<Room>());
-        Corridors = new List<Corridor>(GetComponentsInChildren<Corridor>());
-
-        foreach (var room in Rooms)
-            room.InitState();
-        foreach (var corridor in Corridors)
-            corridor.InitState();
+        return room;
     }
 
 

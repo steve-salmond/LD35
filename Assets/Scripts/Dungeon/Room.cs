@@ -28,10 +28,6 @@ public class Room : Procedural
     public List<Door> Doors
     { get; private set; }
 
-    /** List of adjacent corridors. */
-    public List<Corridor> Corridors
-    { get; private set; }
-
     /** Whether room is moving. */
     public bool Moving
     { get; private set; }
@@ -51,6 +47,8 @@ public class Room : Procedural
     public override void Generate(int seed)
     {
         base.Generate(seed);
+
+        Doors = new List<Door>(GetComponentsInChildren<Door>());
     }
 
     /** Indicates whether this room is moving or not. */
@@ -58,20 +56,6 @@ public class Room : Procedural
     {
         Moving = value;
         Floor.UpdateState();
-    }
-
-    /** Initialize the floor state. */
-    public void InitState()
-    {
-        Doors = new List<Door>(GetComponentsInChildren<Door>());
-        foreach (var door in Doors)
-            door.InitState();
-
-        // Locate corridors that are adjacent to this room.
-        var colliders = Physics.OverlapBox(transform.position, Extents * 0.5f, Quaternion.identity, Floor.CorridorMask);
-        Corridors = colliders.Select(c => c.GetComponentInParent<Corridor>()).Where(c => c != null).ToList();
-        foreach (var corridor in Corridors)
-            corridor.Rooms.Add(this);
     }
 
     /** Update the floor state. */
