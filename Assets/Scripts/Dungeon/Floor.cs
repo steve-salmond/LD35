@@ -44,6 +44,10 @@ public class Floor : Procedural
     public List<Room> Rooms
     { get; private set; }
 
+    /** Rooms indexed by address. */
+    public List<List<Room>> Grid
+    { get; private set; }
+
 
     [Header("Generation")]
 
@@ -84,6 +88,10 @@ public class Floor : Procedural
         Depth = Dungeon.Floors.IndexOf(this) + 1;
         gameObject.name = "Floor " + Depth;
 
+        // Populate room structures.
+        Rooms = new List<Room>();
+        Grid = new List<List<Room>>();
+
         // Determine how big to make this floor.
         var rows = Mathf.RoundToInt(RowsForDepth.Evaluate(Depth));
         var cols = Mathf.RoundToInt(ColumnsForDepth.Evaluate(Depth));
@@ -93,8 +101,11 @@ public class Floor : Procedural
         var exit = Random.Range(0, cols);
 
         // Populate the rooms.
-        Rooms = new List<Room>();
         for (var row = 0; row < rows; row++)
+        {
+            var columns = new List<Room>();
+            Grid.Add(columns);
+
             for (var col = 0; col < cols; col++)
             {
                 var isEntrance = row == 0 && col == entrance;
@@ -106,7 +117,6 @@ public class Floor : Procedural
                     prefab = ExitRoomPrefabs[Random.Range(0, ExitRoomPrefabs.Count)];
 
                 var room = GenerateRoom(row, col, prefab);
-                Rooms.Add(room);
 
                 if (isEntrance)
                     EntranceRoom = room;
@@ -116,7 +126,15 @@ public class Floor : Procedural
                 // Don't allow the entrance room to be rotated, since player spawns there.
                 if (isEntrance)
                     room.transform.rotation = Quaternion.identity;
+
+                // Add room to floor.
+                Rooms.Add(room);
+                columns.Add(room);
             }
+
+            // Randomly set one room upright in each row.
+            columns[Random.Range(0, cols)].transform.rotation = Quaternion.identity;
+        }
 
         // Set up initial state.
         UpdateState();
@@ -137,8 +155,21 @@ public class Floor : Procedural
             room.UpdateState();
     }
 
+    /** Locate room at the given address. */
+    public Room GetRoom(int row, int col)
+    {
+        if (row < 0 || row >= Grid.Count)
+            return null;
 
-    // Public Methods
+        var cols = Grid[row];
+        if (col < 0 || col >= cols.Count)
+            return null;
+
+        return cols[col];
+    }
+
+
+    // Private Methods
     // -----------------------------------------------------
 
     /** Generate a room. */
@@ -148,9 +179,8 @@ public class Floor : Procedural
         room.transform.position = new Vector3(RoomOffset.x * col, -RoomOffset.y * row);
         room.transform.rotation = Quaternion.Euler(0, 0, 90 * Random.Range(0, 4));
         room.transform.parent = transform;
-        room.gameObject.name = string.Format("Room(R{0},C{1})", row, col);
+        room.SetAddress(row, col);
         room.Generate(Random.NextInteger());
-
         return room;
     }
 

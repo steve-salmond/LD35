@@ -4,8 +4,28 @@ using DG.Tweening;
 
 public class UseableRoomRotator : UseableBehaviour
 {
-    /** The Room to rotate. */
-    public Room Room;
+
+    // Properties
+    // -----------------------------------------------------
+
+    /** The Room that rotator belongs to. */
+    public Room Room
+    {
+        get
+        {
+            var t = transform;
+            while (_room == null && t != null)
+            {
+                _room = t.GetComponentInParent<Room>();
+                t = t.parent;
+            }
+
+            return _room;
+        }
+    }
+
+    /** Optional offset, used to rotate adjacent rooms. */
+    public Vector2 Offset;
 
     /** Euler angles to rotate by. */
     public Vector3 Angle;
@@ -19,24 +39,57 @@ public class UseableRoomRotator : UseableBehaviour
     /** Rotation mode. */
     public RotateMode Mode;
 
+    [Header("Effects")]
+
+    /** Effect to play when rotator works. */
+    public GameObject SuccessEffectPrefab;
+
+    /** Effect to play when rotator fails to work. */
+    public GameObject FailureEffectPrefab;
+
+
+    // Members
+    // -----------------------------------------------------
+
+    /** The current room. */
+    private Room _room;
+
+    /** The target room. */
+    private Room _target;
+
+
+    // Public Methods
+    // -----------------------------------------------------
+
     /** Use this object. */
     public override void Use()
     {
-        if (Room.Moving)
-            return;
-
-        Room.SetMoving(true);
-
-        if (WorldSpace)
-            Room.transform.DORotate(Angle, Duration, Mode).OnComplete(OnComplete);
+        _target = Room.GetRelative(Offset);
+        if (_target == null || _target.Moving)
+        {
+            ObjectPool.GetAt(FailureEffectPrefab, transform);
+        }
         else
-            Room.transform.DOLocalRotate(Angle, Duration, Mode).OnComplete(OnComplete);
+        {
+            ObjectPool.GetAt(SuccessEffectPrefab, transform);
+
+            _target.SetMoving(true);
+
+            if (WorldSpace)
+                _target.transform.DORotate(Angle, Duration, Mode).OnComplete(OnComplete);
+            else
+                _target.transform.DOLocalRotate(Angle, Duration, Mode).OnComplete(OnComplete);
+        }
     }
+
+
+    // Private Methods
+    // -----------------------------------------------------
 
     /** Update the game state when rotation completes. */
     private void OnComplete()
     {
-        Room.SetMoving(false);
+        _target.SetMoving(false);
     }
 
 }

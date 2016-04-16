@@ -80,7 +80,7 @@ public class Dungeon : Procedural
             return false;
 
         for (var i = 0; i < Floors.Count; i++)
-            Floors[_current].gameObject.SetActive(i == index);
+            Floors[i].gameObject.SetActive(i == index);
 
         _current = index;
         return true;
