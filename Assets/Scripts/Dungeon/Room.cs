@@ -9,9 +9,6 @@ public class Room : ProceduralGroup
     // Properties
     // -----------------------------------------------------
 
-    /** Size of the room, in units. */
-    public Vector3 Extents;
-    
     /** The floor that this room belongs to. */
     public Floor Floor
     {
