@@ -37,6 +37,18 @@ public class DamageOnCollision : MonoBehaviour
     /** Whether object only takes damage when colliding with another rigidbody. */
     public bool DamagedOnlyByRigidbodies;
 
+    /** Damage factor for self. */
+    public float DamageSelfScale = 1;
+
+    /** Damage factor for impactor. */
+    public float DamageOtherScale = 1;
+
+    /** Whether to limit total damage. */
+    public bool LimitTotalDamage;
+
+    /** Whether to collide only once. */
+    public bool CollideOnceOnly;
+
 
     [Header("Timing")]
 
@@ -61,6 +73,12 @@ public class DamageOnCollision : MonoBehaviour
     /** Last known velocity of this rigidbody. */
     private Vector3 _velocity;
 
+    /** Amount of damage that has been dealt. */
+    private float _damageDealt;
+
+    /** Whether a collision has occurred already. */
+    private bool _collided;
+
 
     // Unity Methods
     // -----------------------------------------------------
@@ -70,12 +88,16 @@ public class DamageOnCollision : MonoBehaviour
     {
         if (!Rigidbody)
             Rigidbody = GetComponent<Rigidbody>();
+        if (!Damageable)
+            Damageable = GetComponent<Damageable>();
 
         // Object can't take damage until warmup completes.
         _nextDamageTime = Time.time + Warmup;
 
         // Reset ignored list.
         _ignored.Clear();
+        _damageDealt = 0;
+        _collided = false;
     }
 
     /** Update every physics frame. */
@@ -90,6 +112,12 @@ public class DamageOnCollision : MonoBehaviour
         // Check if collision can do damage.
         if (Time.time < _nextDamageTime)
             return;
+
+        // Check if we have already collided before.
+        if (CollideOnceOnly && _collided)
+            return;
+
+        _collided = true;
 
         // Can impactor do damage?
         var go = collision.gameObject;
@@ -116,7 +144,26 @@ public class DamageOnCollision : MonoBehaviour
         var massFactor = DamageForMassCurve.Evaluate(mass);
         var damage = DamageMax * speedFactor * massFactor;
         var damager = collision.gameObject.GetComponent<Damager>();
-        Damageable.Damage(damage, damager, collision);
+
+        // Limit damage if desired.
+        if (LimitTotalDamage)
+        {
+            var limit = Mathf.Max(0, DamageMax - _damageDealt);
+            damage = Mathf.Min(limit, damage);
+        }
+        _damageDealt += damage;
+
+        // Apply damage to self.
+        if (Damageable)
+            Damageable.Damage(damage * DamageSelfScale, damager, collision);
+
+        // Apply damage to other entity.
+        var otherDamageable = collision.gameObject.GetComponent<Damageable>();
+        if (otherDamageable)
+        {
+            var myDamager = GetComponent<Damager>();
+            otherDamageable.Damage(damage * DamageOtherScale, myDamager, collision);
+        }
 
         // Cooldown.
         _nextDamageTime = Time.time + Cooldown;
