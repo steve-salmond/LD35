@@ -79,12 +79,16 @@ public class PlayerController : Controller
     /** Determine what kind of aiming method this controller uses. */
     public AimMethod GetAimMethod()
     {
+        return AimMethod.Direction; 
+
+        /*
         if (_input.controllers.joystickCount > 0)
             return AimMethod.Direction;
         else if (_input.controllers.hasMouse)
             return AimMethod.Point;
         else
             return AimMethod.Direction;
+        */
     }
 
     /** Return the controller's current direction vector (input space). */

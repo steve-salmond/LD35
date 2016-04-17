@@ -84,6 +84,11 @@ public class GroundControllable : ControllableBehaviour
     public Rigidbody GroundBody
     { get; private set; }
 
+    /** Ladder that player's climbing on (if any). */
+    public UseableLadder Ladder
+    { get; private set; }
+
+
 
     // Events
     // -----------------------------------------------------
@@ -125,6 +130,16 @@ public class GroundControllable : ControllableBehaviour
     }
 
 
+    // Public Methods
+    // -----------------------------------------------------
+
+    /** Set the ladder to climb. */
+    public void SetLadder(UseableLadder ladder)
+    {
+        Ladder = ladder;
+    }
+
+
     // Protected Methods
     // -----------------------------------------------------
 
@@ -160,6 +175,10 @@ public class GroundControllable : ControllableBehaviour
             GroundBody = hit.rigidbody;
         else
             GroundBody = null;
+
+        // Consider player to be grounded on ladders.
+        if (Ladder != null)
+            Grounded = true;
 
         // Check entity's left and right for ground.
         offset = Vector3.right * GroundToSidesOffset;

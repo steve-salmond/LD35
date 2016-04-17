@@ -39,6 +39,9 @@ public class PlayerControllable : ControllableBehaviour
 
     [Header("Using")]
 
+    /** Use button. */
+    public string UseButton = "Use";
+
     /** Radius to check for nearby objects when using. */
     public float UseRadius = 1;
 
@@ -84,10 +87,13 @@ public class PlayerControllable : ControllableBehaviour
     public void Climb(UseableLadder ladder)
     {
         // Set up ladder climbing.
+        SetSubControllables(null);
         Ladder = ladder;
         Climbing.SetLadder(ladder);
         Climbing.Controller = Controller;
-        SetSubControllables(null);
+        Jumping.Controller = Controller;
+        Groundable.Controller = Controller;
+        Groundable.SetLadder(ladder);
     }
 
     /** Dismount the current ladder (if any). */
@@ -101,6 +107,7 @@ public class PlayerControllable : ControllableBehaviour
         Ladder = null;
         Climbing.SetLadder(null);
         Climbing.Controller = null;
+        Groundable.SetLadder(null);
         SetSubControllables(Controller);
     }
 
@@ -112,7 +119,7 @@ public class PlayerControllable : ControllableBehaviour
     protected override void UpdateControllable(Controller controller)
     {
         // Check if player wishes to use something.
-        if (Controller.GetButtonDown("Use"))
+        if (Controller.GetButtonDown(UseButton))
             Use();
 
         // Dismount ladder if player jumps.

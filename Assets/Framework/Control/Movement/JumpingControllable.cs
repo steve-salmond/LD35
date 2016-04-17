@@ -123,6 +123,18 @@ public class JumpingControllable : ControllableBehaviour
             Jump();
     }
 
+    /** Register with a controller. */
+    protected override void RegisterWithController()
+    {
+        base.RegisterWithController();
+    }
+
+    /** Unregister with a controller. */
+    protected override void UnregisterWithController()
+    {
+        base.UnregisterWithController();
+    }
+
 
     // Private Methods
     // -----------------------------------------------------

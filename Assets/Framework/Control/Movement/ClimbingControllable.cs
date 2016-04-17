@@ -30,6 +30,11 @@ public class ClimbingControllable : ControllableBehaviour
     { get; private set; }
 
 
+    // Members
+    // -----------------------------------------------------
+
+    private float _xVelocity;
+
 
     // Unity Methods
     // -----------------------------------------------------
@@ -113,8 +118,9 @@ public class ClimbingControllable : ControllableBehaviour
         Body.AddForce(force);
 
         // Constrain body to stay on the ladder.
+        var tx = Ladder.transform.position.x;
         var p = Body.position;
-        p.x = Ladder.transform.position.x;
+        p.x = Mathf.SmoothDamp(p.x, tx, ref _xVelocity, 0.1f);
         Body.position = p;
 
         // Debugging visualization.
