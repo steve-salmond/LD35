@@ -16,7 +16,7 @@ public class CameraController : Singleton<CameraController>
 
     public float SmoothTime = 0.2f;
 
-    public Vector2 DistanceRange = new Vector2(20, 60);
+    public Vector2 OrthoSizeRange = new Vector2(5, 25);
     public Vector2 SeparationRange = new Vector2(20, 60);
 
     public Vector3 PositionOffset;
@@ -24,7 +24,7 @@ public class CameraController : Singleton<CameraController>
     public float VerticalZoomBias = 2;
 
     private Vector3 _positionVelocity = Vector3.zero;
-    private Vector3 _zoomVelocity = Vector3.zero;
+    private float _orthoSizeVelocity;
 
     void Start()
     {
@@ -82,15 +82,13 @@ public class CameraController : Singleton<CameraController>
         var separation = delta.magnitude;
         var range = (SeparationRange.y - SeparationRange.x);
         var s = Mathf.Clamp01((separation - SeparationRange.x) / range);
-        var d = Mathf.Lerp(DistanceRange.x, DistanceRange.y, s);
-
-        // Compute final target location.
-        var targetZoom = PositionOffset + new Vector3(0, 0, -d);
 
         // Set target positions.
-        transform.position = Vector3.SmoothDamp(transform.position, average, ref _positionVelocity, SmoothTime);
-        Eye.transform.localPosition = Vector3.SmoothDamp(Eye.transform.localPosition, targetZoom, ref _zoomVelocity, SmoothTime);
-        Eye.transform.LookAt(transform.position);
+        transform.position = Vector3.SmoothDamp(transform.position, average + PositionOffset, ref _positionVelocity, SmoothTime);
+
+        // Update camera zoom factor.
+        var targetOrthoSize = Mathf.Lerp(OrthoSizeRange.x, OrthoSizeRange.y, s);
+        Camera.orthographicSize = Mathf.SmoothDamp(Camera.orthographicSize, targetOrthoSize, ref _orthoSizeVelocity, SmoothTime);
     }
 
     public void SnapTo(Vector3 p)
