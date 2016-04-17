@@ -88,8 +88,8 @@ public class Player : MonoBehaviour
     { get { return !HasLimitedLives; } }
 
     /** Whether the player is allowed to respawn. */
-    public bool CanRespawn
-    { get { return Alive && _game.Playing; } }
+    public bool CanSpawn
+    { get { return Alive && !_game.GameOver; } }
 
     /** The player's controller. */
     public PlayerController Controller
@@ -206,6 +206,7 @@ public class Player : MonoBehaviour
         Id = id;
         Name = "P" + (Id + 1);
         Color = _game.Config.PlayerColors[id];
+        gameObject.name = Name;
 
         // Configure the player controller.
         _controller = new PlayerController(this);
@@ -214,23 +215,9 @@ public class Player : MonoBehaviour
         Lives = _game.Config.PlayerLives;
     }
 
-    /** Spawn player at the specified location. */
-    public bool Spawn(PlayerSpawnPoint spawn)
-    {
-        // Can't spawn if already in control of a host.
-        if (HasControlled)
-            return false;
-
-        // Can't spawn if spawn point is invalid.
-        if (spawn == null || !spawn.CanSpawn())
-            return false;
-
-        // Spawn and take control of the player's default host.
-        var host = Instantiate(HostPrefab);
-        spawn.Spawn(host.gameObject);
-        TakeControlOf(host);
-        return true;        
-    }
+    /** Spawn player at the given spawn point. */
+    public void Spawn(PlayerSpawnPoint spawn, float delay = 0)
+    { StartCoroutine(SpawnRoutine(spawn, delay)); }
 
     /** Apply vibration to the player's joystick (left motor). */
     public void VibrateLeft(float level, float duration)
@@ -369,8 +356,8 @@ public class Player : MonoBehaviour
             OutOfLives(this);
 
         // Schedule new body spawn.
-        if (CanRespawn)
-            StartCoroutine(RespawnRoutine());
+        if (CanSpawn)
+            StartCoroutine(RespawnRoutine(2));
     }
 
     /** Handle damage to the host entity. */
@@ -429,12 +416,26 @@ public class Player : MonoBehaviour
             CausedKill(controller.Player);
     }
 
-    /** Respawn the player after a delay. */
-    private IEnumerator RespawnRoutine()
+    /** Spawn the player after a delay. */
+    private IEnumerator SpawnRoutine(PlayerSpawnPoint spawn, float delay)
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(delay);
+        while (CanSpawn && !HasControlled)
+        {
+            var spawned = SpawnAttempt(spawn);
+            if (spawned)
+                yield break;
 
-        while (CanRespawn && !HasControlled)
+            yield return 0;
+        }
+    }
+
+    /** Respawn the player after a delay. */
+    private IEnumerator RespawnRoutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        while (CanSpawn && !HasControlled)
         {
             var respawned = Respawn();
             if (respawned)
@@ -447,12 +448,30 @@ public class Player : MonoBehaviour
     /** Spawn at the player's last spawn point. */
     private bool Respawn()
     {
-        if (!CanRespawn)
+        if (!CanSpawn)
             return false;
 
         // Locate the spawn point that's furthest from other players.
         var spawn = _game.Players.GetSafestSpawn();
-        return Spawn(spawn);
+        return SpawnAttempt(spawn);
+    }
+
+    /** Spawn player at the specified location. */
+    private bool SpawnAttempt(PlayerSpawnPoint spawn)
+    {
+        // Can't spawn if already in control of a host.
+        if (HasControlled)
+            return false;
+
+        // Can't spawn if spawn point is invalid.
+        if (spawn == null || !spawn.CanSpawn())
+            return false;
+
+        // Spawn and take control of the player's default host.
+        var host = Instantiate(HostPrefab);
+        spawn.Spawn(host.gameObject);
+        TakeControlOf(host);
+        return true;
     }
 
 }

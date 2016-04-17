@@ -79,6 +79,8 @@ public class UseableRoomRotator : UseableBehaviour
                 _target.transform.DORotate(Angle, Duration, Mode).OnComplete(OnComplete);
             else
                 _target.transform.DOLocalRotate(Angle, Duration, Mode).OnComplete(OnComplete);
+
+            _target.transform.DOShakePosition(1.0f, 0.1f);
         }
     }
 
@@ -90,6 +92,7 @@ public class UseableRoomRotator : UseableBehaviour
     private void OnComplete()
     {
         _target.SetMoving(false);
+        _target.transform.DOShakePosition(1.0f, 0.1f);
     }
 
 }

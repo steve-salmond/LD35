@@ -137,9 +137,8 @@ public class GameManager : Singleton<GameManager>
         CameraController.Instance.SnapTo(p);
         UI.Instance.FadeFrom(1, 2);
 
-        // Fire game started event.
-        if (Started != null)
-            Started(this);
+        // Hide the mouse cursor.
+        // Cursor.visible = false;
 
         // First, play intro.
         yield return StartCoroutine(IntroRoutine());
@@ -151,12 +150,7 @@ public class GameManager : Singleton<GameManager>
     private IEnumerator IntroRoutine()
     {
         SetState(GameState.Intro);
-
-        // Hide the mouse cursor.
-        // Cursor.visible = false;
-
-        // Delay a bit after login.
-        yield return new WaitForSeconds(0.5f);
+        yield return 0;
     }
 
     /** Play the game. */
@@ -164,6 +158,11 @@ public class GameManager : Singleton<GameManager>
     {
         SetState(GameState.Playing);
 
+        // Fire game started event.
+        if (Started != null)
+            Started(this);
+
+        // Keep playing until game ends.
         while (Players.AlivePlayerCount > 0)
         {
             if (_floor != Dungeon.CurrentFloor)

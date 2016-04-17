@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Gun : MonoBehaviour
+public class Attacker : MonoBehaviour
 {
     /** Rigidbody that will be influenced. */
     public Rigidbody Body;
@@ -15,7 +15,7 @@ public class Gun : MonoBehaviour
     public LayerMask TargetMask;
     public LayerMask LineOfSightMask;
 
-    public GameObject ProjectilePrefab;
+    public GameObject AttackPrefab;
 
     public float Range = 20;
 
@@ -30,7 +30,7 @@ public class Gun : MonoBehaviour
 
     public int Interval = 5;
     public int MaxResults = 1;
-
+    public bool Reparent;
 
     public GameObject ShootEffectPrefab;
 
@@ -104,12 +104,12 @@ public class Gun : MonoBehaviour
 
         Debug.DrawLine(p, target, Color.yellow, 1);
 
-        // Spawn projectile.
+        // Spawn attack.
         var delta = target - p;
-        var projectile = ObjectPool.GetAt(ProjectilePrefab, Emitter, false);
-        var projectileBody = projectile.GetComponent<Rigidbody>();
-        if (projectileBody)
-            projectileBody.velocity = delta.normalized * Random.Range(Speed.x, Speed.y);
+        var attack = ObjectPool.GetAt(AttackPrefab, Emitter, Reparent);
+        var attackBody = attack.GetComponent<Rigidbody>();
+        if (attackBody)
+            attackBody.velocity = delta.normalized * Random.Range(Speed.x, Speed.y);
 
         // Spawn shoot effect.
         ObjectPool.GetAt(ShootEffectPrefab, Emitter);
