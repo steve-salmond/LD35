@@ -3,6 +3,11 @@ using System.Collections;
 
 public class ProceduralSpawner : ProceduralGroup
 {
+    /** Layer mask that determines if an object can spawn. */
+    public LayerMask SpawnBlockerMask;
+
+    /** Radius to check for blocking objects. */
+    public float SpawnBlockerRadius = 1;
 
     /** Generates procedural content. */
     public override void Generate(int seed)
@@ -37,11 +42,18 @@ public class ProceduralSpawner : ProceduralGroup
     }
 
     /** Spawns a single sub-item. */
-    protected virtual void SpawnItem(Procedural procedural, Vector3 p)
+    protected virtual bool SpawnItem(Procedural procedural, Vector3 p)
     {
+        var obstructed = Physics.CheckSphere(p, SpawnBlockerRadius, SpawnBlockerMask);
+        if (obstructed)
+            return false;
+
         var go = ObjectPool.GetComponent(procedural);
         go.transform.parent = transform;
         go.transform.localPosition = p;
+        go.transform.rotation = Quaternion.identity;
         Generators.Add(go);
+
+        return true;
     }
 }

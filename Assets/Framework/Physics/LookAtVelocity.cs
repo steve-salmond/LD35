@@ -8,16 +8,21 @@ public class LookAtVelocity : MonoBehaviour
 
     public float SmoothTime = 0;
 
+    public float VelocityThreshold = 1;
+    public bool StopAfterCollision;
+
     private Vector3 _direction;
     private Vector3 _directionVelocity;
 
     public int Interval = 5;
+
     private int _frame;
     private float _smoothTime;
+    private bool _stopped;
 
     protected Rigidbody Rigidbody;
 
-    protected virtual void Start()
+    protected virtual void OnEnable()
     {
         if (Transform == null)
             Transform = GetComponent<Transform>();
@@ -28,10 +33,21 @@ public class LookAtVelocity : MonoBehaviour
         _frame = Random.Range(0, Interval);
         _smoothTime = SmoothTime / Interval;
         _direction = transform.forward;
+        _stopped = false;
+    }
+
+    void OnCollisionEnter(Collision c)
+    {
+        if (StopAfterCollision)
+            _stopped = true;
     }
 
     void LateUpdate()
     {
+        // Check if we've been stopped.
+        if (_stopped)
+            return;
+
         // Wait until sufficient frames have passed.
         _frame++;
         if (_frame < Interval)
@@ -41,7 +57,7 @@ public class LookAtVelocity : MonoBehaviour
         var direction = Vector3.zero;
         if (Rigidbody != null)
             direction = Rigidbody.velocity;
-        if (direction.sqrMagnitude < 0.5f)
+        if (direction.magnitude < VelocityThreshold)
             return;
 
         var target = direction.normalized;

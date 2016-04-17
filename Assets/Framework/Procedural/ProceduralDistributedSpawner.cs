@@ -12,6 +12,8 @@ public class ProceduralDistributedSpawner : ProceduralSpawner
     public bool UseQuantityDistribution = true;
     public AnimationCurve QuantityDistribution;
 
+    public int SpawnAttemptsPerItem = 5;
+
     protected override void SpawnItems()
     {
         // Superclass implementation.
@@ -25,11 +27,16 @@ public class ProceduralDistributedSpawner : ProceduralSpawner
         // Generate the objects.
         for (var i = 0; i < quantity; i++)
         {
-            var x = Random.Sample(XDistribution, Bounds.xMin, Bounds.xMax);
-            var y = Random.Sample(YDistribution, Bounds.yMin, Bounds.yMax);
-            var p = new Vector3(x, y, 0);
-            var prefab = Prefabs[Random.Range(0, Prefabs.Count)];
-            SpawnItem(prefab, p);
+            for (var attempt = 0; attempt < SpawnAttemptsPerItem; attempt++)
+            {
+                var x = Random.Sample(XDistribution, Bounds.xMin, Bounds.xMax);
+                var y = Random.Sample(YDistribution, Bounds.yMin, Bounds.yMax);
+                var p = new Vector3(x, y, 0);
+                var prefab = Prefabs[Random.Range(0, Prefabs.Count)];
+                var success = SpawnItem(prefab, p);
+                if (success)
+                    break;
+            }
         }
     }
 

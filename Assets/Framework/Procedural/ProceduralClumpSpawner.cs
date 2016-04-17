@@ -15,6 +15,7 @@ public class ProceduralClumpSpawner : ProceduralSpawner
     public Vector2 ClumpRadiusRange;
     public AnimationCurve ClumpRadiusDistribution;
 
+    public int SpawnAttemptsPerItem = 5;
 
     protected override void SpawnItems()
     {
@@ -42,10 +43,15 @@ public class ProceduralClumpSpawner : ProceduralSpawner
         // Generate clump items.
         for (var i = 0; i < n; i++)
         {
-            var radius = Random.Sample(ClumpRadiusDistribution, ClumpRadiusRange);
-            Vector3 delta = Random.InsideRadius(radius);
-            var prefab = Prefabs[Random.Range(0, Prefabs.Count)];
-            SpawnItem(prefab, center + delta);
+            for (var attempt = 0; attempt < SpawnAttemptsPerItem; attempt++)
+            {
+                var radius = Random.Sample(ClumpRadiusDistribution, ClumpRadiusRange);
+                Vector3 delta = Random.InsideRadius(radius);
+                var prefab = Prefabs[Random.Range(0, Prefabs.Count)];
+                var success = SpawnItem(prefab, center + delta);
+                if (success)
+                    break;
+            }
         }
     }
 

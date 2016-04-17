@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class Room : Procedural
+public class Room : ProceduralGroup
 {
 
     // Properties
@@ -55,6 +55,7 @@ public class Room : Procedural
     public override void Generate(int seed)
     {
         base.Generate(seed);
+
         gameObject.name = string.Format("Room(R{0},C{1})", Row, Col);
         Doors = new List<Door>(GetComponentsInChildren<Door>());
     }
