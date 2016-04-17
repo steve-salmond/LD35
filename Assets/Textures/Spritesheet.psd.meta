@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: f07a6b40a9f9c584bbff249b81b3d4f6
-timeCreated: 1460878217
+timeCreated: 1460885928
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -24,6 +24,10 @@ TextureImporter:
     21300034: Switch
     21300036: SwitchPressed
     21300038: RotateIcon
+    21300040: Ladder
+    21300042: PlatformShort
+    21300044: PlatformVeryShort
+    21300046: BracketSquare
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -618,6 +622,70 @@ TextureImporter:
         - {x: 25.5, y: -26}
         - {x: 25.5, y: 24}
         - {x: 20.5, y: 26}
+    - name: Ladder
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1728
+        width: 85
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -42.5, y: 128}
+        - {x: -42.5, y: -128}
+        - {x: 42.5, y: -128}
+        - {x: 42.5, y: 128}
+    - name: PlatformShort
+      rect:
+        serializedVersion: 2
+        x: 564
+        y: 1524
+        width: 279
+        height: 87
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -139.5, y: 43.5}
+        - {x: -139.5, y: -43.5}
+        - {x: 139.5, y: -43.5}
+        - {x: 139.5, y: 43.5}
+    - name: PlatformVeryShort
+      rect:
+        serializedVersion: 2
+        x: 886
+        y: 1526
+        width: 148
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -74, y: 41}
+        - {x: -74, y: -41}
+        - {x: 74, y: -41}
+        - {x: 74, y: 41}
+    - name: BracketSquare
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 1336
+        width: 146
+        height: 146
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -72, y: 73}
+        - {x: -73, y: 71}
+        - {x: -73, y: -65}
+        - {x: -68, y: -71}
+        - {x: -65, y: -73}
+        - {x: 73, y: -73}
+        - {x: 73, y: 68}
+        - {x: 69, y: 73}
     outline: []
   spritePackingTag: Dungeon
   userData: 

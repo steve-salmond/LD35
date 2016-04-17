@@ -39,6 +39,11 @@ public class UseableRoomRotator : UseableBehaviour
     /** Rotation mode. */
     public RotateMode Mode;
 
+    public SpriteRenderer Off;
+    public SpriteRenderer On;
+    public SpriteRenderer Icon;
+
+
     [Header("Effects")]
 
     /** Effect to play when rotator works. */
@@ -83,6 +88,9 @@ public class UseableRoomRotator : UseableBehaviour
                 _target.transform.DOLocalRotate(Angle, Duration, Mode).SetDelay(0.5f).OnComplete(OnComplete);
 
             CameraEffects.Instance.Shake(0.1f, Duration * 1.5f);
+
+            On.DOFade(1, 0.2f);
+            Icon.DOFade(1, 0.2f);
         }
     }
 
@@ -96,6 +104,9 @@ public class UseableRoomRotator : UseableBehaviour
         _target.SetMoving(false);
 
         CameraController.Instance.OrthoSizeExtra = 0;
+
+        On.DOFade(0, 0.2f);
+        Icon.DOFade(0.75f, 0.2f);
     }
 
 }

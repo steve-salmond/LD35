@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Linq;
 
 [RequireComponent(typeof(Rigidbody))]
 
@@ -32,6 +33,9 @@ public class PlayerControllable : ControllableBehaviour
     /** Melee control. */
     public MeleeControllable Melee;
 
+    /** Climbing control. */
+    public ClimbingControllable Climbing;
+
 
     [Header("Using")]
 
@@ -50,7 +54,7 @@ public class PlayerControllable : ControllableBehaviour
     // -----------------------------------------------------
 
     /** Buffer for detecting usable objects. */
-    private Collider[] _colliders = new Collider[1];
+    private Collider[] _colliders = new Collider[3];
 
 
     // Unity Methods
@@ -79,13 +83,25 @@ public class PlayerControllable : ControllableBehaviour
     /** Start using a ladder. */
     public void Climb(UseableLadder ladder)
     {
+        // Set up ladder climbing.
         Ladder = ladder;
+        Climbing.SetLadder(ladder);
+        Climbing.Controller = Controller;
+        SetSubControllables(null);
     }
 
     /** Dismount the current ladder (if any). */
     public void Dismount()
     {
+        // Are we climbing a ladder?
+        if (Ladder == null)
+            return;
+
+        // Restore normal movement behaviour.
         Ladder = null;
+        Climbing.SetLadder(null);
+        Climbing.Controller = null;
+        SetSubControllables(Controller);
     }
 
 
@@ -99,8 +115,12 @@ public class PlayerControllable : ControllableBehaviour
         if (Controller.GetButtonDown("Use"))
             Use();
 
-        // Dismount ladders when player jumps.
-        if (Controller.GetButtonDown("Jump"))
+        // Dismount ladder if player jumps.
+        if (Ladder != null && Controller.GetButtonDown("Jump"))
+            Dismount();
+
+        // Dismount ladder if it's no longer climbable.
+        if (Ladder != null && Climbing.Ladder == null)
             Dismount();
     }
 
@@ -108,22 +128,14 @@ public class PlayerControllable : ControllableBehaviour
     protected override void RegisterWithController()
     {
         base.RegisterWithController();
-        Groundable.Controller = Controller;
-        Running.Controller = Controller;
-        Jumping.Controller = Controller;
-        Aiming.Controller = Controller;
-        Melee.Controller = Controller;
+        SetSubControllables(Controller);
     }
 
     /** Unregister with a controller. */
     protected override void UnregisterWithController()
     {
         base.UnregisterWithController();
-        Groundable.Controller = null;
-        Running.Controller = null;
-        Jumping.Controller = null;
-        Aiming.Controller = null;
-        Melee.Controller = null;
+        SetSubControllables(null);
     }
 
 
@@ -137,9 +149,30 @@ public class PlayerControllable : ControllableBehaviour
         if (n <= 0)
             return;
 
-        var useable = _colliders[0].GetComponent<UseableBehaviour>();
-        if (useable)
-            useable.Use(this);
+        var p = transform.position;
+
+        for (var i = 0; i < n; i++)
+        {
+            // Check line of sight.
+            var c = _colliders[i].ClosestPointOnBounds(p);
+            if (Physics.Linecast(c, p))
+                continue;
+
+            // Try to use this object.
+            var useable = _colliders[i].GetComponent<UseableBehaviour>();
+            if (useable)
+                useable.Use(this);
+        }
+    }
+
+    /** Set controllers. */
+    private void SetSubControllables(Controller controller)
+    {
+        Groundable.Controller = controller;
+        Running.Controller = controller;
+        Jumping.Controller = controller;
+        Aiming.Controller = controller;
+        Melee.Controller = controller;
     }
 
 
