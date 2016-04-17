@@ -62,7 +62,6 @@ public class PlayerSpawnPoint : MonoBehaviour
     public void Spawn(GameObject go)
     {
         go.transform.position = transform.position;
-        // go.transform.rotation = transform.rotation;
         _nextSpawnTime = Time.time + Cooldown;
     }
 

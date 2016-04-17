@@ -91,7 +91,7 @@ public class AimingControllable : ControllableBehaviour
     // -----------------------------------------------------
 
     /** Desired facing rotation. */
-    private Quaternion _targetRotation;
+    private Quaternion _targetRotation = Quaternion.Euler(0, 90, 0);
 
     /** Desired aim rotation. */
     private Quaternion _aimRotation;
