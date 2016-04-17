@@ -9,6 +9,9 @@ public class Attacker : MonoBehaviour
     /** Emitter. */
     public Transform Emitter;
 
+    /** Animator. */
+    public Animator Animator;
+
     /** Strength of the recoil force. */
     public float Recoil;
 
@@ -119,6 +122,10 @@ public class Attacker : MonoBehaviour
 
         // Schedule next shot.
         _nextShootTime = Time.time + Random.Range(RepeatDelay.x, RepeatDelay.y);
+
+        // Fire attack animation.
+        if (Animator)
+            Animator.SetTrigger("Attack");
     }
 
 

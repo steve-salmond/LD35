@@ -253,8 +253,7 @@ public class AimingControllable : ControllableBehaviour
         }
 
         // Turn entity towards desired facing rotation.
-        Facing.rotation = Quaternion.Slerp(Facing.rotation,
-            _targetRotation, Time.fixedDeltaTime * FacingRotateSpeed);
+        Facing.rotation = _targetRotation;
     }
 
     /** Set a new facing direction for the entity. */

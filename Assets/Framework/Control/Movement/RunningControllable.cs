@@ -45,6 +45,9 @@ public class RunningControllable : ControllableBehaviour
 
     [Header("Sprinting")]
 
+    /** Whether sprinting is enabled. */
+    public bool SprintEnabled;
+
     /** Speed boost when sprinting. */
     public float SprintMultiplier = 1.5f;
 
@@ -154,7 +157,8 @@ public class RunningControllable : ControllableBehaviour
     protected override void UpdateControllable(Controller controller)
     {
         // Update sprinting state.
-        UpdateSprinting();
+        if (SprintEnabled)
+            UpdateSprinting();
 
         // Update entity's dashing.
         UpdateDashing();

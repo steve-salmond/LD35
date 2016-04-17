@@ -17,8 +17,7 @@ public class SpeedLimit : MonoBehaviour
 	void FixedUpdate()
     {
         var v = Body.velocity;
-        var speed = v.magnitude;
-        if (speed > MaxSpeed)
-            Body.velocity = v.normalized * MaxSpeed;
+        v.x = Mathf.Clamp(v.x, -MaxSpeed, MaxSpeed);
+        Body.velocity = v;
     }
 }
