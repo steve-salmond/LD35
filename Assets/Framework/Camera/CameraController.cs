@@ -16,6 +16,7 @@ public class CameraController : Singleton<CameraController>
 
     public float SmoothTime = 0.2f;
 
+    public float OrthoSizeExtra = 0;
     public Vector2 OrthoSizeRange = new Vector2(5, 25);
     public Vector2 SeparationRange = new Vector2(20, 60);
 
@@ -87,7 +88,7 @@ public class CameraController : Singleton<CameraController>
         transform.position = Vector3.SmoothDamp(transform.position, average + PositionOffset, ref _positionVelocity, SmoothTime);
 
         // Update camera zoom factor.
-        var targetOrthoSize = Mathf.Lerp(OrthoSizeRange.x, OrthoSizeRange.y, s);
+        var targetOrthoSize = Mathf.Lerp(OrthoSizeRange.x, OrthoSizeRange.y, s) + OrthoSizeExtra;
         Camera.orthographicSize = Mathf.SmoothDamp(Camera.orthographicSize, targetOrthoSize, ref _orthoSizeVelocity, SmoothTime);
     }
 

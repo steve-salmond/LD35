@@ -75,12 +75,14 @@ public class UseableRoomRotator : UseableBehaviour
 
             _target.SetMoving(true);
 
-            if (WorldSpace)
-                _target.transform.DORotate(Angle, Duration, Mode).OnComplete(OnComplete);
-            else
-                _target.transform.DOLocalRotate(Angle, Duration, Mode).OnComplete(OnComplete);
+            CameraController.Instance.OrthoSizeExtra = 10;
 
-            _target.transform.DOShakePosition(1.0f, 0.1f);
+            if (WorldSpace)
+                _target.transform.DORotate(Angle, Duration, Mode).SetDelay(0.5f).OnComplete(OnComplete);
+            else
+                _target.transform.DOLocalRotate(Angle, Duration, Mode).SetDelay(0.5f).OnComplete(OnComplete);
+
+            CameraEffects.Instance.Shake(0.1f, Duration * 1.5f);
         }
     }
 
@@ -92,7 +94,8 @@ public class UseableRoomRotator : UseableBehaviour
     private void OnComplete()
     {
         _target.SetMoving(false);
-        _target.transform.DOShakePosition(1.0f, 0.1f);
+
+        CameraController.Instance.OrthoSizeExtra = 0;
     }
 
 }

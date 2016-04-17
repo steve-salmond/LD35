@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 public class Door : MonoBehaviour
 {
@@ -9,6 +10,12 @@ public class Door : MonoBehaviour
 
     /** The door's blocking body. */
     public GameObject Blocker;
+
+    /** Door's left side. */
+    public GameObject Left;
+
+    /** Door's right side. */
+    public GameObject Right;
 
     /** The floor that this door belongs to. */
     public Floor Floor
@@ -54,6 +61,8 @@ public class Door : MonoBehaviour
     /** Lock effect. */
     public GameObject LockEffectPrefab;
 
+    /** Speed at which doors animate open/closed. */
+    private float DoorSpeed = 0.25f;
 
 
     // Members
@@ -108,6 +117,14 @@ public class Door : MonoBehaviour
         // Show the door.
         Blocker.SetActive(true);
 
+        // Animate doors.
+        Left.transform.DOKill();
+        Left.transform.localScale = new Vector3(0, 2, 2);
+        Left.transform.DOScaleX(2, DoorSpeed);
+        Right.transform.DOKill();
+        Right.transform.localScale = new Vector3(0, 2, 2);
+        Right.transform.DOScaleX(2, DoorSpeed);
+
         // Spawn lock effect.
         if (_updated)
             ObjectPool.GetAt(LockEffectPrefab, transform);
@@ -121,6 +138,14 @@ public class Door : MonoBehaviour
 
         // Hide the door.
         Blocker.SetActive(false);
+
+        // Animate doors.
+        Left.transform.DOKill();
+        Left.transform.localScale = Vector3.one * 2;
+        Left.transform.DOScaleX(0, DoorSpeed);
+        Right.transform.DOKill();
+        Right.transform.localScale = Vector3.one * 2;
+        Right.transform.DOScaleX(0, DoorSpeed);
 
         // Spawn unlock effect.
         if (_updated)
