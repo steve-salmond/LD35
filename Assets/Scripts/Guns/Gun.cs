@@ -108,7 +108,8 @@ public class Gun : MonoBehaviour
         var delta = target - p;
         var projectile = ObjectPool.GetAt(ProjectilePrefab, Emitter, false);
         var projectileBody = projectile.GetComponent<Rigidbody>();
-        projectileBody.velocity = delta.normalized * Random.Range(Speed.x, Speed.y);
+        if (projectileBody)
+            projectileBody.velocity = delta.normalized * Random.Range(Speed.x, Speed.y);
 
         // Spawn shoot effect.
         ObjectPool.GetAt(ShootEffectPrefab, Emitter);

@@ -32,6 +32,9 @@ public class Explosive : MonoBehaviour
     /** Optional upwards modifier to lift objects. */
     public float ForceUpwardsModifier = 0;
 
+    /** Explosive delay. */
+    public float Delay;
+
 
     // Members
     // -----------------------------------------------------
@@ -78,7 +81,7 @@ public class Explosive : MonoBehaviour
 
     private IEnumerator ExplodeRoutine()
     {
-        yield return 0;
+        yield return new WaitForSeconds(Delay);
 
         // Look for nearby objects to damage.
         var origin = transform.position;
