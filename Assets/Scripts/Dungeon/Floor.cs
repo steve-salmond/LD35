@@ -100,8 +100,10 @@ public class Floor : Procedural
         Grid = new List<List<Room>>();
 
         // Determine how big to make this floor.
-        var rows = Mathf.RoundToInt(RowsForDepth.Evaluate(Depth));
-        var cols = Mathf.RoundToInt(ColumnsForDepth.Evaluate(Depth));
+        var rowsForDepth = RowsForDepth.Evaluate(Depth);
+        var colsForDepth = ColumnsForDepth.Evaluate(Depth);
+        var rows = Mathf.RoundToInt(rowsForDepth);
+        var cols = Mathf.RoundToInt(colsForDepth);
 
         // Pick a random entrance/exit room location.
         var entrance = Random.Range(0, cols);

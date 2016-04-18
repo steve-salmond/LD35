@@ -68,7 +68,7 @@ public class Room : ProceduralGroup
 
     /** Set this room as an exit. */
     public void SetExit(bool value)
-    { IsEntrance = value; }
+    { IsExit = value; }
 
     /** Generate this room. */
     public override void Generate(int seed)

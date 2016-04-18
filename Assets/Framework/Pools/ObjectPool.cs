@@ -144,13 +144,16 @@ public class ObjectPool : Singleton<ObjectPool>
     /** Get an object with the associated component on it. */
     protected T GetObjectWithComponent<T>(T component, bool active = true, bool staticBatch = false, string name = null) where T : Component
 	{
+        if (component == null)
+            return null;
+
 		return pool.GetObjectWithComponent<T>(component, active, staticBatch, name);
 	}
 
     /** Get an object with the associated component on it, parented. */
     protected T GetObjectWithComponentAt<T>(T component, Transform t, bool reparent = true) where T : Component
     {
-        if (t == null)
+        if (component == null || t == null)
             return null;
 
         var c = pool.GetObjectWithComponent<T>(component, false);

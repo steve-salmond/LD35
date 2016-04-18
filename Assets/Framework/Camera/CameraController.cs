@@ -29,14 +29,21 @@ public class CameraController : Singleton<CameraController>
     private Vector3 _positionVelocity = Vector3.zero;
     private float _orthoSizeVelocity;
 
+    private float _nextUpdateTime;
+
     void Start()
     {
         Camera = GetComponentInChildren<Camera>();
         Listener = GetComponentInChildren<AudioListener>();
+
+        _nextUpdateTime = Time.time + 0.5f;
     }
 
     void FixedUpdate()
     {
+        if (Time.time < _nextUpdateTime)
+            return;
+
         // Compute average player position and separation.
         var players = GameManager.Instance.Players.Players;
         if (players.Count <= 0)

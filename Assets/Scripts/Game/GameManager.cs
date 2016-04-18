@@ -137,9 +137,10 @@ public class GameManager : Singleton<GameManager>
         Players.Configure(this);
 
         // Snap camera to initial location.
+        UI.Instance.FadeFrom(1, 2);
+        yield return 0;
         var p = Players.Players[0].transform.position;
         CameraController.Instance.SnapTo(p);
-        UI.Instance.FadeFrom(1, 2);
 
         // Hide the mouse cursor.
         // Cursor.visible = false;
