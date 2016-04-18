@@ -24,8 +24,11 @@ public class MeleeControllable : ControllableBehaviour
     /** Button used to initiate melee attack. */
     public string AttackButton = "Melee";
 
+    /** Delay before spawning melee swing effect. */
+    public float AttackSwingDelay = 0.1f;
+
     /** Delay before spawning melee attack effect. */
-    public float AttackHitDelay = 0.1f;
+    public float AttackHitDelay = 0.2f;
 
     /** Cooldown after initiating a melee attack. */
     public float AttackCooldown = 0.5f;
@@ -88,11 +91,17 @@ public class MeleeControllable : ControllableBehaviour
 
         _nextAttackTime = Time.time + AttackCooldown;
 
-        ObjectPool.GetAt(SwingEffectPrefab, Emitter, true);
+        Invoke("SpawnSwing", AttackSwingDelay);
         Invoke("SpawnEffect", AttackHitDelay);
 
         if (Attacked != null)
             Attacked();
+    }
+
+    /** Spawn swing effect. */
+    private void SpawnSwing()
+    {
+        ObjectPool.GetAt(SwingEffectPrefab, Emitter, true);
     }
 
     /** Spawn the attack effect. */
