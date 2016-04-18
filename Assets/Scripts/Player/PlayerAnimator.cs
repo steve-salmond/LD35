@@ -9,6 +9,7 @@ public class PlayerAnimator : MonoBehaviour
     public MeleeControllable Melee;
     public JumpingControllable Jumping;
     public GroundControllable Groundable;
+    public ClimbingControllable Climbing;
 
     public Animator Animator;
 
@@ -40,6 +41,6 @@ public class PlayerAnimator : MonoBehaviour
         var speed = Body.velocity.magnitude;
         Animator.SetBool("Moving", speed > MovingThreshold);
         Animator.SetBool("Falling", Groundable.Falling);
+        Animator.SetBool("Climbing", Climbing.Ladder != null);
     }
-
 }

@@ -48,6 +48,9 @@ public class PlayerControllable : ControllableBehaviour
     /** Layer mask that governs what usable objects will be detected. */
     public LayerMask UseMask;
 
+    /** Layer mask for things that block using line of sight. */
+    public LayerMask UseBlockerMask;
+
     /** Ladder that player's climbing on (if any). */
     public UseableLadder Ladder
     { get; private set; }
@@ -152,17 +155,16 @@ public class PlayerControllable : ControllableBehaviour
     /** Attempt to use a nearby object. */
     private void Use()
     {
-        var n = Physics.OverlapSphereNonAlloc(transform.position, UseRadius, _colliders, UseMask);
+        var n = Physics.OverlapSphereNonAlloc(Origin.position, UseRadius, _colliders, UseMask);
         if (n <= 0)
             return;
 
-        var p = transform.position;
-
+        var p = Origin.position;
         for (var i = 0; i < n; i++)
         {
             // Check line of sight.
             var c = _colliders[i].ClosestPointOnBounds(p);
-            if (Physics.Linecast(c, p))
+            if (Physics.Linecast(c, p, UseBlockerMask))
                 continue;
 
             // Try to use this object.
