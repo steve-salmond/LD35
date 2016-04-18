@@ -140,10 +140,10 @@ public class GameManager : Singleton<GameManager>
         Players.Configure(this);
 
         // Snap camera to initial location.
-        UI.Instance.FadeIn(2);
         yield return 0;
         var p = Players.Players[0].transform.position;
         CameraController.Instance.SnapTo(p);
+        UI.Instance.FadeIn(2);
 
         // First, play intro.
         yield return StartCoroutine(IntroRoutine());

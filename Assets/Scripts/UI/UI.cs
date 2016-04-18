@@ -35,6 +35,8 @@ public class UI : Singleton<UI>
         _player = ReInput.players.GetPlayer(0);
 
         HowToPlay.transform.localScale = Vector3.zero;
+
+        Black.color = new Color(0, 0, 0, 1);
     }
 
     private void Update()

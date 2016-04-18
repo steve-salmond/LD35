@@ -18,6 +18,7 @@ public class Intro : MonoBehaviour
 
     void Start()
     {
+        Cursor.visible = false;
         StartCoroutine(IntroRoutine());
 	}
 	
