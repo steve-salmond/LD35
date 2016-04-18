@@ -3,7 +3,6 @@ using System.Collections;
 
 public class ProceduralTransform : Procedural
 {
-    public bool FaceCamera = true;
     public Vector2 ScaleRange = Vector2.one;
 
     public Vector2 RotationRange = Vector2.zero;

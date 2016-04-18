@@ -86,7 +86,13 @@ public class Dungeon : Procedural
             floor.Generate(floor.Seed);
 
         for (var i = 0; i < Floors.Count; i++)
-            Floors[i].gameObject.SetActive(i == index);
+        {
+            var active = i == index;
+            if (!active)
+                Floors[i].Degenerate();
+
+            Floors[i].gameObject.SetActive(active);
+        }
 
         return true;
     }

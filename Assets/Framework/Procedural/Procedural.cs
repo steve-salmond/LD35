@@ -11,6 +11,9 @@ public class Procedural : MonoBehaviour
     public bool Generated
     { get; private set; }
 
+    /** Priority for this procedural. */
+    public int Priority;
+
 
     // Members
     // -----------------------------------------------------

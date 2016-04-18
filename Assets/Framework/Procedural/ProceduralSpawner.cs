@@ -9,6 +9,9 @@ public class ProceduralSpawner : ProceduralGroup
     /** Radius to check for blocking objects. */
     public float SpawnBlockerRadius = 1;
 
+    public bool Reparent = true;
+    public bool AffectRotation = true;
+
     /** Generates procedural content. */
     public override void Generate(int seed)
     {
@@ -44,14 +47,23 @@ public class ProceduralSpawner : ProceduralGroup
     /** Spawns a single sub-item. */
     protected virtual bool SpawnItem(Procedural procedural, Vector3 p)
     {
+        if (!procedural)
+            return false;
+
         var obstructed = Physics.CheckSphere(p, SpawnBlockerRadius, SpawnBlockerMask);
         if (obstructed)
             return false;
 
-        var go = ObjectPool.GetComponent(procedural);
-        go.transform.parent = transform;
-        go.transform.localPosition = p;
-        go.transform.rotation = Quaternion.identity;
+        var go = ObjectPool.GetComponentAt(procedural, transform, Reparent);
+
+        if (Reparent)
+            go.transform.localPosition = p;
+        else
+            go.transform.position = transform.TransformPoint(p);
+
+        if (!AffectRotation)
+            go.transform.rotation = Quaternion.identity;
+
         Generators.Add(go);
 
         return true;

@@ -126,7 +126,11 @@ public class GameManager : Singleton<GameManager>
         SetState(GameState.None);
 
         // Generate dungeon.
-        Dungeon.Generate(Config.Seed);
+        var seed = Config.Seed;
+        if (Config.Randomize)
+            seed = Random.Range(0, int.MaxValue);
+
+        Dungeon.Generate(seed);
         _floor = Dungeon.CurrentFloor;
 
         // Configure players.

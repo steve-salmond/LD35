@@ -11,7 +11,7 @@ public class ProceduralGroup : Procedural
     public List<Procedural> Generators
         { get; private set; }
 
-	private void Awake()
+	protected virtual void Awake()
     {
         // Ensure generator collection exists.
         if (Generators == null)
@@ -20,7 +20,8 @@ public class ProceduralGroup : Procedural
         // Get generators from direct descendants only.
         if (transform.childCount > 0 && Generators.Count == 0)
             Generators = new List<Procedural>(GetComponentsInChildren<Procedural>()
-                .Where(x => x.transform.parent == transform));
+                .Where(x => x.transform.parent == transform)
+                .OrderByDescending(x => x.Priority));
 	}
 	
 	public override void Generate(int seed)

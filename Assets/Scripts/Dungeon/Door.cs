@@ -26,8 +26,12 @@ public class Door : MonoBehaviour
     {
         get
         {
-            if (!_room)
-                _room = GetComponentInParent<Room>();
+            var t = transform;
+            while (_room == null && t != null)
+            {
+                _room = t.GetComponentInParent<Room>();
+                t = t.parent;
+            }
 
             return _room;
         }

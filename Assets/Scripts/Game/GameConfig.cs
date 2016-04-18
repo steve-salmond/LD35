@@ -7,6 +7,9 @@ public class GameConfig
     /** Dungeon generation seed. */
     public int Seed;
 
+    /** Whether to generate a new dungeon every time. */
+    public bool Randomize;
+
     /** Minimum number of players in game. */
     public int MinPlayers = 1;
 
