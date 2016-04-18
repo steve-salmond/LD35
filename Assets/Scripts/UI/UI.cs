@@ -29,13 +29,11 @@ public class UI : Singleton<UI>
     {
         var game = GameManager.Instance;
         game.Started += OnGameStarted;
-        game.ChangedFloor += OnChangedFloor;
         game.Ended += OnGameEnded;
 
         _player = ReInput.players.GetPlayer(0);
 
         HowToPlay.transform.localScale = Vector3.zero;
-
         Black.color = new Color(0, 0, 0, 1);
     }
 
@@ -68,24 +66,20 @@ public class UI : Singleton<UI>
 
     private void OnGameStarted(GameManager game)
     {
+        StartCoroutine(StartGameRoutine(game));
     }
 
-    private void OnChangedFloor(GameManager game, Floor floor)
+    private IEnumerator StartGameRoutine(GameManager game)
     {
-        StartCoroutine(ChangeFloorRoutine(game, floor));
+        FloorName.text = game.Dungeon.CurrentFloor.Name;
+        FloorName.DOFade(1, 0.5f);
+        yield return new WaitForSeconds(2);
+        FloorName.DOFade(0, 1);
     }
 
     private void OnGameEnded(GameManager game)
     {
         StartCoroutine(GameOverRoutine(game));
-    }
-
-    private IEnumerator ChangeFloorRoutine(GameManager game, Floor floor)
-    {
-        FloorName.text = floor.Name;
-        FloorName.DOFade(1, 0.5f);
-        yield return new WaitForSeconds(2);
-        FloorName.DOFade(0, 1);
     }
 
     private IEnumerator GameOverRoutine (GameManager game)

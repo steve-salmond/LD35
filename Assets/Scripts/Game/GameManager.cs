@@ -26,6 +26,9 @@ public class GameManager : Singleton<GameManager>
     public List<Player> Winners
     { get; private set; }
 
+    /** The current floor. */
+    public static int CurrentFloorIndex = 0;
+
 
     // Components
     // -----------------------------------------------------
@@ -59,9 +62,6 @@ public class GameManager : Singleton<GameManager>
 
     /** Event fired when game starts. */
     public GameEventHandler Started;
-
-    /** Event fired when player moves to a new floor. */
-    public FloorEventHandler ChangedFloor;
 
     /** Event fired when game ends. */
     public GameEventHandler Ended;
@@ -105,17 +105,15 @@ public class GameManager : Singleton<GameManager>
     {
         var next = Dungeon.CurrentFloor.Next;
         if (next != null)
+        {
+            CurrentFloorIndex++;
             _floor = next;
+        }
         else
+        {
+            CurrentFloorIndex = 0;
             _completed = true;
-    }
-
-    /** Try to move to the previous floor in the dungeon. */
-    public void PreviousFloor()
-    {
-        var previous = Dungeon.CurrentFloor.Previous;
-        if (previous != null)
-            _floor = previous;
+        }
     }
 
 
@@ -132,8 +130,8 @@ public class GameManager : Singleton<GameManager>
         var seed = Config.Seed;
         if (Config.Randomize)
             seed = Random.Range(0, int.MaxValue);
-
         Dungeon.Generate(seed);
+        Dungeon.SetCurrentFloor(CurrentFloorIndex);
         _floor = Dungeon.CurrentFloor;
 
         // Configure players.
@@ -173,10 +171,10 @@ public class GameManager : Singleton<GameManager>
         // Keep playing until game ends.
         while (Players.AlivePlayerCount > 0)
         {
-            if (_floor != Dungeon.CurrentFloor)
-                yield return StartCoroutine(ChangeFloor(_floor));
-            else if (_completed)
+            if (_completed)
                 yield break;
+            else if (_floor != Dungeon.CurrentFloor)
+                yield return StartCoroutine(ChangeFloor(_floor));
 
             yield return 0;
         }
@@ -188,23 +186,8 @@ public class GameManager : Singleton<GameManager>
         UI.Instance.FadeOut(2);
         yield return new WaitForSeconds(2);
 
-        // Update the current floor.
-        Dungeon.SetCurrentFloor(_floor);
-
-        // Move player(s) to entrance location.
-        var entrance = _floor.EntranceRoom.GetComponentInChildren<Entrance>();
-        var p = entrance.transform.position;
-        foreach (var player in Players.Players)
-            if (player.HasControlled)
-                player.Controlled.transform.position = p;
-
-        // Snap camera to new location.
-        CameraController.Instance.SnapTo(p);
-        UI.Instance.FadeIn(2);
-
-        // Fire floor change notification.
-        if (ChangedFloor != null)
-            ChangedFloor(this, floor);
+        // Reload the game scene to get to next floor.
+        SceneManager.LoadScene("Game");
     }
 
     /** Handle the game over condition. */

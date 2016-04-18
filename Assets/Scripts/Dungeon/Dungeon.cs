@@ -22,11 +22,8 @@ public class Dungeon : Procedural
 
     [Header("Generation")]
 
-    /** Difficulty factor (0 == easy, 1 = very hard). */
-    public float Difficulty;
-    
-    /** Number of floors in the dungeon (depends on difficulty). */
-    public AnimationCurve FloorCountForDifficulty;
+    /** Number of floors in the dungeon. */
+    public int FloorCount = 3;
 
     /** Prefab used to generate a floor. */
     public Floor FloorPrefab;
@@ -48,7 +45,7 @@ public class Dungeon : Procedural
         base.Generate(seed);
 
         Floors = new List<Floor>();
-        var floorCount = FloorCountForDifficulty.Evaluate(Difficulty);
+        var floorCount = FloorCount;
 
         for (var i = 0; i < floorCount; i++)
         {
@@ -65,8 +62,6 @@ public class Dungeon : Procedural
             if (i < (floorCount - 1))
                 Floors[i].SetNext(Floors[i + 1]);
         }
-
-        SetCurrentFloor(Floors[0]);
     }
 
     /** Set the current floor. */
@@ -86,13 +81,7 @@ public class Dungeon : Procedural
             floor.Generate(floor.Seed);
 
         for (var i = 0; i < Floors.Count; i++)
-        {
-            var active = i == index;
-            if (!active)
-                Floors[i].Degenerate();
-
-            Floors[i].gameObject.SetActive(active);
-        }
+            Floors[i].gameObject.SetActive(i == index);
 
         return true;
     }
