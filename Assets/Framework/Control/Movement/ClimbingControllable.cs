@@ -91,6 +91,10 @@ public class ClimbingControllable : ControllableBehaviour
         if (Mathf.Abs(dx) > 0.9f)
             Ladder = null;
 
+        // Check if ladder is disabled.
+        if (Ladder && !Ladder.gameObject.activeInHierarchy)
+            Ladder = null;
+
         // Do we still have a ladder?
         if (Ladder == null)
             return;

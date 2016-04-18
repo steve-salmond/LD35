@@ -168,6 +168,7 @@ public class DamageOnCollision : MonoBehaviour
         // Cooldown.
         _nextDamageTime = Time.time + Cooldown;
 
+        /*
         // Optional debug information.
         if (DebugMode && damage > 0)
         {
@@ -179,6 +180,7 @@ public class DamageOnCollision : MonoBehaviour
             Debug.DrawRay(Rigidbody.position, effectiveVelocity, Color.green, 5);
             Debug.DrawRay(Rigidbody.position, myVelocity, Color.blue, 5);
         }
+        */
     }
 
 
