@@ -13,8 +13,10 @@ public class UI : Singleton<UI>
     public Graphic Black;
 
     public Text FloorName;
+    public Text FloorCount;
 
     public Text GameOver;
+    public Text Continued;
 
     public Text Health;
 
@@ -71,10 +73,12 @@ public class UI : Singleton<UI>
 
     private IEnumerator StartGameRoutine(GameManager game)
     {
-        FloorName.text = game.Dungeon.CurrentFloor.Name;
-        FloorName.DOFade(1, 0.5f);
+        var dungeon = game.Dungeon;
+        FloorName.text = dungeon.CurrentFloor.Name;
+        FloorCount.text = " OF " + dungeon.FloorCount;
         yield return new WaitForSeconds(2);
         FloorName.DOFade(0, 1);
+        FloorCount.DOFade(0, 1);
     }
 
     private void OnGameEnded(GameManager game)
@@ -85,6 +89,7 @@ public class UI : Singleton<UI>
     private IEnumerator GameOverRoutine (GameManager game)
     {
         GameOver.DOFade(1, 1);
+        Continued.DOFade(1, 1);
         yield return new WaitForSeconds(2);
     }
 

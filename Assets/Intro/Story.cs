@@ -34,12 +34,12 @@ public class Story : MonoBehaviour
             yield return wait;
             Text.text = text.Substring(0, i);
             Source.PlayOneShot(TypingSound, TypingVolume);
-            if (Input.anyKeyDown)
+            if (Input.anyKey)
                 break;
         }
 
         var timeout = Time.realtimeSinceStartup + 4;
-        while (Time.realtimeSinceStartup < timeout && !Input.anyKeyDown)
+        while (Time.realtimeSinceStartup < timeout && !Input.anyKey)
             yield return 0;
 
         Black.DOFade(1, 1);
