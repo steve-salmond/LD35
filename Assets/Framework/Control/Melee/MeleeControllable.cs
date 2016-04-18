@@ -88,7 +88,7 @@ public class MeleeControllable : ControllableBehaviour
 
         _nextAttackTime = Time.time + AttackCooldown;
 
-        ObjectPool.GetAt(SwingEffectPrefab, Emitter, false);
+        ObjectPool.GetAt(SwingEffectPrefab, Emitter, true);
         Invoke("SpawnEffect", AttackHitDelay);
 
         if (Attacked != null)

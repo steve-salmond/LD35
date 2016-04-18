@@ -38,9 +38,14 @@ public class PlayerAnimator : MonoBehaviour
 
     private void LateUpdate()
     {
-        var speed = Body.velocity.magnitude;
+
+        var speed = Mathf.Abs(Body.velocity.x);
+        if (Climbing.Ladder != null)
+            speed = Mathf.Abs(Body.velocity.y);
+
         Animator.SetBool("Moving", speed > MovingThreshold);
         Animator.SetBool("Falling", Groundable.Falling);
+        Animator.SetBool("Grounded", Groundable.Grounded);
         Animator.SetBool("Climbing", Climbing.Ladder != null);
     }
 }
