@@ -123,7 +123,7 @@ public class Floor : Procedural
                 else if (isExit)
                     prefab = ExitRoomPrefabs[Random.Range(0, ExitRoomPrefabs.Count)];
 
-                var room = GenerateRoom(row, col, prefab);
+                var room = GenerateRoom(row, col, prefab, isEntrance, isExit);
 
                 if (isEntrance)
                     EntranceRoom = room;
@@ -170,13 +170,15 @@ public class Floor : Procedural
     // -----------------------------------------------------
 
     /** Generate a room. */
-    private Room GenerateRoom(int row, int col, Room prefab)
+    private Room GenerateRoom(int row, int col, Room prefab, bool isEntrance, bool isExit)
     {
         var room = Instantiate(prefab);
         room.transform.position = new Vector3(RoomOffset.x * col, -RoomOffset.y * row);
         room.transform.rotation = Quaternion.Euler(0, 0, 90 * Random.Range(0, 4));
         room.transform.parent = transform;
         room.SetAddress(row, col);
+        room.SetEntrance(isEntrance);
+        room.SetExit(isExit);
         room.Generate(Random.NextInteger());
         return room;
     }

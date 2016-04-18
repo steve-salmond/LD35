@@ -9,8 +9,10 @@ public class ProceduralTransform : Procedural
     public bool UseRotationDistribution = false;
     public AnimationCurve RotationDistribution;
 
-    public float FlipXProbability = 0.5f;
+    public float FlipXProbability = 0.0f;
     public float FlipYProbability = 0.0f;
+
+    public float RotationSnap = 0;
 
     /** Generates procedural content. */
     public override void Generate(int seed)
@@ -28,6 +30,9 @@ public class ProceduralTransform : Procedural
         var rz = UseRotationDistribution 
             ? Random.Sample(RotationDistribution, RotationRange)
             : Random.Range(RotationRange);
+
+        if (RotationSnap > 0)
+            rz = Mathf.RoundToInt(rz / RotationSnap) * RotationSnap;
 
         var r = transform.localRotation;
         transform.localRotation = Quaternion.Euler(r.x, r.y, rz);

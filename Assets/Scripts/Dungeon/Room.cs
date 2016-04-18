@@ -37,6 +37,20 @@ public class Room : ProceduralGroup
     public bool Moving
     { get; private set; }
 
+    /** Whether room is an entrance room. */
+    public bool IsEntrance
+    { get; private set; }
+
+    /** Whether room is an exit room. */
+    public bool IsExit
+    { get; private set; }
+
+    /** Entrance layout prefab. */
+    public Procedural EntrancePrefab;
+
+    /** Exit layout prefab. */
+    public Procedural ExitPrefab;
+
 
     // Members
     // -----------------------------------------------------
@@ -48,10 +62,23 @@ public class Room : ProceduralGroup
     // Public Methods
     // -----------------------------------------------------
 
+    /** Set this room as an entrance. */
+    public void SetEntrance(bool value)
+    { IsEntrance = value; }
+
+    /** Set this room as an exit. */
+    public void SetExit(bool value)
+    { IsEntrance = value; }
+
     /** Generate this room. */
     public override void Generate(int seed)
     {
         base.Generate(seed);
+
+        if (IsEntrance)
+            Spawn(EntrancePrefab);
+        if (IsExit)
+            Spawn(ExitPrefab);
 
         gameObject.name = string.Format("Room(R{0},C{1})", Row, Col);
         Doors = new List<Door>(GetComponentsInChildren<Door>());
@@ -79,5 +106,13 @@ public class Room : ProceduralGroup
     /** Indicates whether this room is moving or not. */
     public void SetMoving(bool value)
         { Moving = value; }
+
+    /** Spawn a procedural object. */
+    private void Spawn(Procedural prefab)
+    {
+        var go = ObjectPool.GetComponentAt(prefab, transform, true);
+        if (go)
+            Generators.Add(go);
+    }
 
 }
