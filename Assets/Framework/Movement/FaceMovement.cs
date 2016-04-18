@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Facing : MonoBehaviour {
+public class FaceMovement : MonoBehaviour {
 
 	public Transform Target;
 

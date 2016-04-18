@@ -5,13 +5,9 @@ public class SpriteFacing : MonoBehaviour
 {
     public Rigidbody Body;
 
-    public SpriteRenderer Renderer;
-
 	// Use this for initialization
 	void Start ()
     {
-        if (!Renderer)
-            Renderer = GetComponent<SpriteRenderer>();
         if (!Body)
             Body = GetComponentInParent<Rigidbody>();
     }
@@ -19,6 +15,8 @@ public class SpriteFacing : MonoBehaviour
 	// Update is called once per frame
 	void LateUpdate ()
     {
-        Renderer.flipX = Body.velocity.x > 0;
+        transform.localRotation = (Body.velocity.x <= 0) 
+            ? Quaternion.identity 
+            : Quaternion.Euler(0, 180, 0);
 	}
 }
