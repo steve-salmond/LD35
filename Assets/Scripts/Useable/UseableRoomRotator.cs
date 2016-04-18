@@ -49,6 +49,9 @@ public class UseableRoomRotator : UseableBehaviour
     /** Effect to play when rotator works. */
     public GameObject SuccessEffectPrefab;
 
+    /** Effect to play on room when rotator works. */
+    public GameObject RoomSuccessEffectPrefab;
+
     /** Effect to play when rotator fails to work. */
     public GameObject FailureEffectPrefab;
 
@@ -77,6 +80,8 @@ public class UseableRoomRotator : UseableBehaviour
         else
         {
             ObjectPool.GetAt(SuccessEffectPrefab, transform);
+
+            ObjectPool.GetAt(RoomSuccessEffectPrefab, Room.transform);
 
             _target.SetMoving(true);
 
