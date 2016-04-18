@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: f07a6b40a9f9c584bbff249b81b3d4f6
-timeCreated: 1460941600
+timeCreated: 1460965317
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -45,6 +45,8 @@ TextureImporter:
     21300076: Human
     21300078: WereClimbRight
     21300080: WereWindup
+    21300082: HowToPlay
+    21300084: Health
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -1251,6 +1253,36 @@ TextureImporter:
         - {x: -71.92963, y: 55.52236}
         - {x: -70.92963, y: 59.52236}
         - {x: -72.92963, y: 61.52236}
+    - name: HowToPlay
+      rect:
+        serializedVersion: 2
+        x: 762
+        y: 1346
+        width: 265
+        height: 117
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -132.5, y: 58.5}
+        - {x: -132.5, y: -58.5}
+        - {x: 132.5, y: -58.5}
+        - {x: 132.5, y: 58.5}
+    - name: Health
+      rect:
+        serializedVersion: 2
+        x: 762
+        y: 1209
+        width: 265
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -132.5, y: 58}
+        - {x: -132.5, y: -58}
+        - {x: 132.5, y: -58}
+        - {x: 132.5, y: 58}
     outline: []
   spritePackingTag: Dungeon
   userData: 

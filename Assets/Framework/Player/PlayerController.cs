@@ -198,7 +198,8 @@ public class PlayerController : Controller
 
             _vibrateTweens[key] = DOTween.To(
                 () => j.GetVibration(motor),
-                v => j.SetVibration(motor, v), 0, duration);
+                v => j.SetVibration(motor, v), 0, duration)
+                .SetUpdate(UpdateType.Normal, true);
         }
     }
 
