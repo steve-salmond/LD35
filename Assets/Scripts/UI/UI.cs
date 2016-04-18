@@ -101,7 +101,7 @@ public class UI : Singleton<UI>
 
         Time.timeScale = 0;
 
-        Fade(0.75f, 0.5f);
+        FadeOut(0.5f, 0.75f);
 
         HowToPlay.transform.DOKill();
         HowToPlay.transform.DOScale(1, 0.35f)
@@ -114,7 +114,7 @@ public class UI : Singleton<UI>
             yield return 0;
         }
 
-        Fade(0, 0.5f);
+        FadeIn(0.5f);
 
         Time.timeScale = 1;
 
@@ -124,17 +124,19 @@ public class UI : Singleton<UI>
 
 
     /** Fade to black. */
-    public void Fade(float alpha, float duration = 2)
+    public void FadeOut(float duration = 2, float alpha = 1)
     {
         Black.DOKill();
+        Black.color = new Color(0, 0, 0, 0);
         Black.DOFade(alpha, duration).SetUpdate(UpdateType.Normal, true);
     }
 
     /** Fade from black. */
-    public void FadeFrom(float alpha, float duration = 2)
+    public void FadeIn(float duration = 2)
     {
         Black.DOKill();
-        Black.DOFade(alpha, duration).From().SetUpdate(UpdateType.Normal, true);
+        Black.color = new Color(0, 0, 0, 1);
+        Black.DOFade(0, duration).SetUpdate(UpdateType.Normal, true);
     }
 
 

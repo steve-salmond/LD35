@@ -89,6 +89,9 @@ public class GameManager : Singleton<GameManager>
     /** Initialization. */
     private void Start()
     {
+        // Hide the mouse cursor.
+        Cursor.visible = false;
+
         // Fire up the game control routine.
         StartCoroutine(GameRoutine());
     }
@@ -137,13 +140,10 @@ public class GameManager : Singleton<GameManager>
         Players.Configure(this);
 
         // Snap camera to initial location.
-        UI.Instance.FadeFrom(1, 2);
+        UI.Instance.FadeIn(2);
         yield return 0;
         var p = Players.Players[0].transform.position;
         CameraController.Instance.SnapTo(p);
-
-        // Hide the mouse cursor.
-        // Cursor.visible = false;
 
         // First, play intro.
         yield return StartCoroutine(IntroRoutine());
@@ -185,7 +185,7 @@ public class GameManager : Singleton<GameManager>
     /** Switch floors. */
     private IEnumerator ChangeFloor(Floor floor)
     {
-        UI.Instance.Fade(1, 2);
+        UI.Instance.FadeOut(2);
         yield return new WaitForSeconds(2);
 
         // Update the current floor.
@@ -200,7 +200,7 @@ public class GameManager : Singleton<GameManager>
 
         // Snap camera to new location.
         CameraController.Instance.SnapTo(p);
-        UI.Instance.Fade(0, 2);
+        UI.Instance.FadeIn(2);
 
         // Fire floor change notification.
         if (ChangedFloor != null)
