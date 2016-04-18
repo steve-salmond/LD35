@@ -20,6 +20,8 @@ public class CameraController : Singleton<CameraController>
     public Vector2 OrthoSizeRange = new Vector2(5, 25);
     public Vector2 SeparationRange = new Vector2(20, 60);
 
+    public Vector2 Leading = new Vector2(0.2f, 0.2f);
+
     public Vector3 PositionOffset;
 
     public float VerticalZoomBias = 2;
@@ -41,6 +43,7 @@ public class CameraController : Singleton<CameraController>
             return;
 
         var average = Vector3.zero;
+        var velocity = Vector3.zero;
         var min = Vector3.zero;
         var max = Vector3.zero;
         var alive = 0;
@@ -53,6 +56,9 @@ public class CameraController : Singleton<CameraController>
             alive++;
             var p = player.transform.position;
             average += p;
+
+            if (player.HasControlled)
+                velocity += player.Controlled.GetComponent<Rigidbody>().velocity;
 
             if (alive == 1)
             {
@@ -74,7 +80,10 @@ public class CameraController : Singleton<CameraController>
 
         // Divide through by alive count to reach the average position.
         if (alive > 0)
+        {
             average /= alive;
+            velocity /= alive;
+        }
 
         // Zoom out when players are widely separated.
         var delta = max - min;
@@ -84,8 +93,10 @@ public class CameraController : Singleton<CameraController>
         var range = (SeparationRange.y - SeparationRange.x);
         var s = Mathf.Clamp01((separation - SeparationRange.x) / range);
 
-        // Set target positions.
-        transform.position = Vector3.SmoothDamp(transform.position, average + PositionOffset, ref _positionVelocity, SmoothTime);
+        // Set target position.
+        var leadingOffset = new Vector3(velocity.x * Leading.x, velocity.y * Leading.y);
+        var target = average + PositionOffset + leadingOffset;
+        transform.position = Vector3.SmoothDamp(transform.position, target, ref _positionVelocity, SmoothTime);
 
         // Update camera zoom factor.
         var targetOrthoSize = Mathf.Lerp(OrthoSizeRange.x, OrthoSizeRange.y, s) + OrthoSizeExtra;
