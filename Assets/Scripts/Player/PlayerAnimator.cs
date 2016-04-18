@@ -3,7 +3,6 @@ using System.Collections;
 
 public class PlayerAnimator : MonoBehaviour
 {
-
     public Rigidbody Body;
 
     public MeleeControllable Melee;
@@ -14,6 +13,10 @@ public class PlayerAnimator : MonoBehaviour
     public Animator Animator;
 
     public float MovingThreshold = 1;
+
+    public Transform Feet;
+    public GameObject FootstepEffectPrefab;
+    public GameObject LadderstepEffectPrefab;
 
     private void Awake()
     {
@@ -34,6 +37,16 @@ public class PlayerAnimator : MonoBehaviour
     private void OnJumped()
     {
         Animator.SetTrigger("Jump");
+    }
+
+    private void Footstep()
+    {
+        ObjectPool.GetAt(FootstepEffectPrefab, Feet, false);
+    }
+
+    private void LadderStep()
+    {
+        ObjectPool.GetAt(LadderstepEffectPrefab, Body.transform, false);
     }
 
     private void LateUpdate()
