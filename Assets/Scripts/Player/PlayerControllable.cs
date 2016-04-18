@@ -18,6 +18,9 @@ public class PlayerControllable : ControllableBehaviour
     /** Player's center point. */
     public Transform Origin;
 
+    /** Player's damageable. */
+    public Damageable Damageable;
+
     /** Ground detection. */
     public GroundControllable Groundable;
 
@@ -71,6 +74,8 @@ public class PlayerControllable : ControllableBehaviour
     {
         if (!Body)
             Body = GetComponent<Rigidbody>();
+        if (!Damageable)
+            Damageable = GetComponent<Damageable>();
     }
 
     /** Physics update. */

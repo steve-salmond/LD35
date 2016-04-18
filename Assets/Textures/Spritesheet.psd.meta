@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: f07a6b40a9f9c584bbff249b81b3d4f6
-timeCreated: 1460965317
+timeCreated: 1460969681
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -47,6 +47,8 @@ TextureImporter:
     21300080: WereWindup
     21300082: HowToPlay
     21300084: Health
+    21300086: Carrot
+    21300088: Heart
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -1283,6 +1285,43 @@ TextureImporter:
         - {x: -132.5, y: -58}
         - {x: 132.5, y: -58}
         - {x: 132.5, y: 58}
+    - name: Carrot
+      rect:
+        serializedVersion: 2
+        x: 570
+        y: 1220
+        width: 70
+        height: 100
+      alignment: 9
+      pivot: {x: 0.38947666, y: 0.48452637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 1.7366333, y: 51.547363}
+        - {x: -8.263367, y: 44.547363}
+        - {x: -27.263367, y: 27.547363}
+        - {x: -27.263367, y: -48.452637}
+        - {x: 8.736633, y: -48.452637}
+        - {x: 42.736633, y: 5.5473633}
+        - {x: 42.736633, y: 45.547363}
+        - {x: 32.736633, y: 51.547363}
+    - name: Heart
+      rect:
+        serializedVersion: 2
+        x: 649
+        y: 1223
+        width: 97
+        height: 88
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -48.5, y: 44}
+        - {x: -48.5, y: -17}
+        - {x: -36.5, y: -44}
+        - {x: 38.5, y: -44}
+        - {x: 48.5, y: -28}
+        - {x: 48.5, y: 43}
+        - {x: 42.5, y: 44}
     outline: []
   spritePackingTag: Dungeon
   userData: 
