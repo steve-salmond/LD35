@@ -72,6 +72,6 @@ public class Intro : MonoBehaviour
         if (quitting)
             Application.Quit();
         else
-            SceneManager.LoadScene("Game");
+            SceneManager.LoadScene("Story");
     }
 }
