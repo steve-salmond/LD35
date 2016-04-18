@@ -162,6 +162,9 @@ public class GameManager : Singleton<GameManager>
         if (Started != null)
             Started(this);
 
+        // Start the game music.
+        MusicManager.Instance.Game();
+
         // Keep playing until game ends.
         while (Players.AlivePlayerCount > 0)
         {

@@ -9,8 +9,10 @@ public class Intro : MonoBehaviour
 {
     public Image Logo;
     public Image Logotype;
+    public Image Black;
 
     public Text Jam;
+    public Text Author;
 
     public AudioSource Sting;
 
@@ -21,6 +23,8 @@ public class Intro : MonoBehaviour
 	
 	IEnumerator IntroRoutine()
     {
+        MusicManager.Instance.Intro();
+
         Sting.PlayDelayed(0.25f);
 
         Logotype.transform.Rotate(0, 0, 2.5f);
@@ -46,20 +50,28 @@ public class Intro : MonoBehaviour
         DOTween.Sequence()
             .AppendInterval(3.0f)
             .Append(Jam.DOFade(0, 1).From());
+        DOTween.Sequence()
+            .AppendInterval(4.0f)
+            .Append(Author.DOFade(0, 1).From());
 
         yield return new WaitForSeconds(1);
 
-        var timeout = Time.realtimeSinceStartup + 6;
+        var timeout = Time.realtimeSinceStartup + 5;
         while (Time.realtimeSinceStartup < timeout && !Input.anyKeyDown)
             yield return 0;
 
+        var quitting = Input.GetKey(KeyCode.Escape);
+        if (quitting)
+            MusicManager.Instance.FadeOut(0.75f);
+
         Sting.DOFade(0, 0.5f);
-        Logo.DOFade(0, 1.0f);
-        Logotype.DOFade(0, 1.0f);
-        Jam.DOFade(0, 1.0f);
+        Black.DOFade(1, 1);
 
         yield return new WaitForSeconds(1);
 
-        SceneManager.LoadScene("Game");
+        if (quitting)
+            Application.Quit();
+        else
+            SceneManager.LoadScene("Game");
     }
 }
