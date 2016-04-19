@@ -43,6 +43,8 @@ public class UseableRoomRotator : UseableBehaviour
     public SpriteRenderer On;
     public SpriteRenderer Icon;
 
+    public ParticleSystem Indicator;
+
 
     [Header("Effects")]
 
@@ -64,6 +66,17 @@ public class UseableRoomRotator : UseableBehaviour
 
     /** The target room. */
     private Room _target;
+
+
+    /** Update. */
+    protected void Update()
+    {
+        if (!_target)
+            _target = Room.GetRelative(Offset);
+
+        if (Indicator && _target)
+            Indicator.transform.LookAt(_target.transform.position);
+    }
 
 
     // Public Methods
