@@ -98,6 +98,7 @@ public class UseableRoomRotator : UseableBehaviour
 
             _target.SetMoving(true);
             CameraController.Instance.Using = true;
+            CameraController.Instance.Focus(_target.transform, 0.5f);
 
             if (WorldSpace)
                 _target.transform.DORotate(Angle, Duration, Mode).SetDelay(0.5f).OnComplete(OnComplete);
@@ -119,6 +120,8 @@ public class UseableRoomRotator : UseableBehaviour
     private void OnComplete()
     {
         _target.SetMoving(false);
+
+        CameraController.Instance.Focus(_target.transform, 0);
         CameraController.Instance.Using = false;
 
         On.DOFade(0, 0.2f);

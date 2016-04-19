@@ -14,8 +14,12 @@ public class Room : ProceduralGroup
     {
         get
         {
-            if (!_floor)
-                _floor = GetComponentInParent<Floor>();
+            var t = transform;
+            while (_floor == null && t != null)
+            {
+                _floor = t.GetComponentInParent<Floor>();
+                t = t.parent;
+            }
 
             return _floor;
         }
@@ -101,7 +105,7 @@ public class Room : ProceduralGroup
 
     /** Locates nearby room using a relative grid offset. */
     public Room GetRelative(int dr, int dc)
-        { return Floor.GetRoom(Row + dr, Col + dc); }
+     { return Floor ? Floor.GetRoom(Row + dr, Col + dc) : null; }
 
     /** Indicates whether this room is moving or not. */
     public void SetMoving(bool value)

@@ -23,7 +23,7 @@ public class CameraController : Singleton<CameraController>
         set
         {
             _zooming = value;
-            _zoomSizeExtra = value ? 10 : 0;
+            _zoomSizeExtra = value ? 9 : 0;
         }
     }
 
@@ -34,7 +34,7 @@ public class CameraController : Singleton<CameraController>
         set
         {
             _using = value;
-            _useSizeExtra = value ? 10 : 0;
+            _useSizeExtra = value ? 9 : 0;
         }
     }
 
@@ -52,6 +52,10 @@ public class CameraController : Singleton<CameraController>
     private float _nextUpdateTime;
     private float _zoomSizeExtra = 0;
     private float _useSizeExtra = 0;
+
+    public Transform _focus;
+    public float _focusWeight = 0;
+
 
     void Start()
     {
@@ -122,9 +126,14 @@ public class CameraController : Singleton<CameraController>
         var range = (SeparationRange.y - SeparationRange.x);
         var s = Mathf.Clamp01((separation - SeparationRange.x) / range);
 
+
+        var focusOffset = Vector3.zero;
+        if (_focus)
+            focusOffset = (_focus.position - average) * _focusWeight;
+
         // Set target position.
         var leadingOffset = new Vector3(velocity.x * Leading.x, velocity.y * Leading.y);
-        var target = average + PositionOffset + leadingOffset;
+        var target = average + PositionOffset + leadingOffset + focusOffset;
         transform.position = Vector3.SmoothDamp(transform.position, target, ref _positionVelocity, SmoothTime);
 
         // Update camera zoom factor.
@@ -137,6 +146,12 @@ public class CameraController : Singleton<CameraController>
     {
         _positionVelocity = Vector3.zero;
         transform.position = p;
+    }
+
+    public void Focus(Transform t, float weight = 1)
+    {
+        _focus = t;
+        _focusWeight = weight;
     }
 
 }
