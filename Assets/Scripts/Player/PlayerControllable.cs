@@ -59,6 +59,11 @@ public class PlayerControllable : ControllableBehaviour
     { get; private set; }
 
 
+    /** Zoom toggle button. */
+    public string ZoomButton = "Zoom";
+
+
+
     // Members
     // -----------------------------------------------------
 
@@ -126,6 +131,9 @@ public class PlayerControllable : ControllableBehaviour
     /** Update from controller. */
     protected override void UpdateControllable(Controller controller)
     {
+        // Zoom out if desired.
+        CameraController.Instance.Zooming = Controller.GetButton(ZoomButton);
+
         // Check if player wishes to use something.
         if (Controller.GetButtonDown(UseButton))
             Use();

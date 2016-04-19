@@ -84,8 +84,7 @@ public class UseableRoomRotator : UseableBehaviour
             ObjectPool.GetAt(RoomSuccessEffectPrefab, Room.transform);
 
             _target.SetMoving(true);
-
-            CameraController.Instance.OrthoSizeExtra = 10;
+            CameraController.Instance.Using = true;
 
             if (WorldSpace)
                 _target.transform.DORotate(Angle, Duration, Mode).SetDelay(0.5f).OnComplete(OnComplete);
@@ -107,8 +106,7 @@ public class UseableRoomRotator : UseableBehaviour
     private void OnComplete()
     {
         _target.SetMoving(false);
-
-        CameraController.Instance.OrthoSizeExtra = 0;
+        CameraController.Instance.Using = false;
 
         On.DOFade(0, 0.2f);
         Icon.DOFade(0.75f, 0.2f);
