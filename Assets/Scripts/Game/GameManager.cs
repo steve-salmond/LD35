@@ -90,7 +90,9 @@ public class GameManager : Singleton<GameManager>
     private void Start()
     {
         // Hide the mouse cursor.
+        #if !UNITY_WEBGL
         Cursor.visible = false;
+        #endif
 
         // Fire up the game control routine.
         StartCoroutine(GameRoutine());
