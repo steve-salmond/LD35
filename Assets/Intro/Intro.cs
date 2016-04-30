@@ -18,7 +18,11 @@ public class Intro : MonoBehaviour
 
     void Start()
     {
+        // Hide the mouse cursor.
+        #if !UNITY_WEBGL
         Cursor.visible = false;
+        #endif
+
         StartCoroutine(IntroRoutine());
 	}
 	

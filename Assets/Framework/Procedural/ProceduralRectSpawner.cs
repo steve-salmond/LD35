@@ -10,6 +10,8 @@ public class ProceduralRectSpawner : ProceduralSpawner
     public AnimationCurve QuantityDistribution;
     public int SpawnAttemptsPerItem = 5;
 
+    public float QuantityForDepthScaleFactor = 1;
+
     protected override void SpawnItems()
     {
         // Superclass implementation
